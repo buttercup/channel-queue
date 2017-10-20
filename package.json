@@ -26,5 +26,8 @@
   "homepage": "https://github.com/buttercup/channel-queue#readme",
   "dependencies": {
     "eventemitter3": "^2.0.3"
+  },
+  "devDependencies": {
+    "jsdoc-to-markdown": "^3.0.0"
   }
 }

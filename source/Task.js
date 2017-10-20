@@ -1,14 +1,13 @@
-const EventEmitter = require("eventemitter3");
-
 const TASK_TYPE_NORMAL = "normal";
 const TASK_TYPE_HIGH_PRIORITY = "high-priority";
 const TASK_TYPE_TAIL = "tail";
 
-class Task extends EventEmitter {
+class Task {
 
-    constructor(item, type) {
-        super();
+    constructor(item, type, stack = null) {
         this._target = (typeof item === "function") ? item : () => item;
+        this._stack = stack;
+        this._type = type;
         this._resolveFn = null;
         this._rejectFn = null;
         this._queuedPromise = new Promise((resolve, reject) => {
@@ -27,12 +26,27 @@ class Task extends EventEmitter {
         return this._queuedPromise;
     }
 
+    get stack() {
+        return this._stack;
+    }
+
     get target() {
         return this._target;
     }
 
-    execute(input) {
+    get type() {
+        return this._type;
+    }
 
+    execute() {
+        const fn = this.target;
+        return fn()
+            .then(result => {
+                this._resolveFn(result);
+            })
+            .catch(err => {
+                this._rejectFn(err);
+            });
     }
 
 }
