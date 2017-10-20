@@ -1,6 +1,6 @@
 {
   "name": "@buttercup/channel-queue",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A queue management library with channels",
   "main": "source/index.js",
   "scripts": {
