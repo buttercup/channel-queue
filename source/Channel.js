@@ -84,6 +84,12 @@ class Channel extends EventEmitter {
     }
 
     enqueue(item, type, stack = null) {
+        if (stack) {
+            const stackItems = this.getStackedItems(stack);
+            if (stackItems.length > 0) {
+                return stackItems[stackItems.length - 1].queuedPromise;
+            }
+        }
         const task = new Task(item, type, stack);
         this.tasks.push(task);
         this.sort();
@@ -91,6 +97,10 @@ class Channel extends EventEmitter {
             this.start();
         }
         return task.queuedPromise;
+    }
+
+    getStackedItems(stack) {
+        return this.tasks.filter(task => task.stack && task.stack === stack);
     }
 
     retrieveNextItem() {

@@ -111,6 +111,37 @@ describe("Channel", function() {
                 expect(res).to.equal("hello");
             });
         });
+
+        it("enqueues items with a stack to a maximum of 1 in-queue", function() {
+            this.channel.enqueue(NOOP, TASK_TYPE_NORMAL, "closing");
+            this.channel.enqueue(NOOP, TASK_TYPE_NORMAL, "closing");
+            this.channel.enqueue(NOOP, TASK_TYPE_NORMAL, "opening");
+            expect(this.channel.getStackedItems("closing")).to.have.lengthOf(1);
+            expect(this.channel.getStackedItems("opening")).to.have.lengthOf(1);
+        });
+
+        it("returns the same promise for over-stacked items", function() {
+            const closing1 = this.channel.enqueue(NOOP, TASK_TYPE_NORMAL, "closing");
+            const closing2 = this.channel.enqueue(NOOP, TASK_TYPE_NORMAL, "closing");
+            expect(closing1).to.equal(closing2);
+        });
+    });
+
+    describe("getStackedItems", function() {
+        beforeEach(function() {
+            this.channel = new Channel("test");
+            this.channel.autostart = false;
+            this.channel.enqueue(NOOP, TASK_TYPE_NORMAL, "closing");
+            this.channel.enqueue(NOOP, TASK_TYPE_NORMAL, "opening");
+            this.channel.enqueue(NOOP, TASK_TYPE_NORMAL);
+            this.closingItem = this.channel.tasks[0];
+        });
+
+        it("gets all items in a stack", function() {
+            const items = this.channel.getStackedItems("closing");
+            expect(items).to.have.lengthOf(1);
+            expect(items[0]).to.equal(this.closingItem);
+        });
     });
 
     describe("retrieveNextItem", function() {
