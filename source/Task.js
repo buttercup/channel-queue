@@ -4,7 +4,10 @@ const TASK_TYPE_TAIL = "tail";
 
 class Task {
 
-    constructor(item, type, stack = null) {
+    constructor(item, type = TASK_TYPE_NORMAL, stack = null) {
+        if (item instanceof Promise !== true && typeof item !== "function") {
+            throw new Error("Invalid task item: Expected a Promise or Function");
+        }
         this._target = (typeof item === "function") ? item : () => item;
         this._stack = stack;
         this._type = type;
