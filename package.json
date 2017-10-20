@@ -1,0 +1,30 @@
+{
+  "name": "@buttercup/channel-queue",
+  "version": "0.0.0",
+  "description": "A queue management library with channels",
+  "main": "source/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buttercup/channel-queue.git"
+  },
+  "keywords": [
+    "queue",
+    "channel",
+    "enqueue",
+    "promise",
+    "event",
+    "emitter"
+  ],
+  "author": "Buttercup <info@buttercup.pw>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/buttercup/channel-queue/issues"
+  },
+  "homepage": "https://github.com/buttercup/channel-queue#readme",
+  "dependencies": {
+    "eventemitter3": "^2.0.3"
+  }
+}
