@@ -23,13 +23,13 @@ function compareTasks(taskA, taskB) {
     // Sort by priority:
     if (typeA === TASK_TYPE_HIGH_PRIORITY && typeB !== TASK_TYPE_HIGH_PRIORITY) {
         // A is high priority, and B isn't
-        return 1;
+        return -1;
     } else if (typeB === TASK_TYPE_HIGH_PRIORITY && typeA !== TASK_TYPE_HIGH_PRIORITY) {
         // B is high priority, and A isn't
-        return -1;
+        return 1;
     } else if (typeB === TASK_TYPE_TAIL && typeA !== TASK_TYPE_TAIL) {
         // B is a tail-task, and A isn't
-        return 1;
+        return -1;
     } else if (typeA === TASK_TYPE_TAIL && typeB !== TASK_TYPE_TAIL) {
         // A is a tail-task, and B isn't
         return 1;
@@ -37,10 +37,10 @@ function compareTasks(taskA, taskB) {
     // Sort by created time:
     if (createdA < createdB) {
         // A is older
-        return 1;
+        return -1;
     } else if (createdB < createdA) {
         // B is older
-        return -1;
+        return 1;
     }
     // Equal priority
     return 0;
@@ -54,6 +54,9 @@ class Channel extends EventEmitter {
 
     constructor(name) {
         super();
+        if (typeof name !== "string" || name.length <= 0) {
+            throw new Error("Failed creating Channel: Invalid or empty name");
+        }
         this._name = name;
         this._tasks = [];
         this._running = false;
@@ -65,7 +68,7 @@ class Channel extends EventEmitter {
     }
 
     get isRunning() {
-        this._running;
+        return this._running;
     }
 
     get tasks() {
@@ -102,10 +105,11 @@ class Channel extends EventEmitter {
      * Start processing the queue
      * Will automatically return early if queue has already started
      * @fires Channel#started
+     * @returns {Boolean} Returns true if started, false if already started
      */
     start() {
         if (this.isRunning) {
-            return;
+            return false;
         }
         const runNextItem = () => {
             const item = this.retrieveNextItem();
@@ -120,7 +124,8 @@ class Channel extends EventEmitter {
         };
         this.emit("started");
         this.isRunning = true;
-        runNextItem();
+        setTimeout(() => runNextItem(), 0);
+        return true;
     }
 
 }

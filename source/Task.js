@@ -40,7 +40,15 @@ class Task {
 
     execute() {
         const fn = this.target;
-        return fn()
+        let output;
+        try {
+            output = fn();
+        } catch(err) {
+            this._rejectFn(err);
+            return Promise.resolve();
+        }
+        const chainOutput = (output instanceof Promise) ? output : Promise.resolve(output);
+        return chainOutput
             .then(result => {
                 this._resolveFn(result);
             })
