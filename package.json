@@ -4,6 +4,7 @@
   "description": "A queue management library with channels",
   "main": "source/index.js",
   "scripts": {
+    "pub": "np",
     "test": "npm run test:unit",
     "test:unit": "mocha -r test/index.js 'test/unit/**/*.spec.js'"
   },
@@ -33,6 +34,7 @@
     "chai-as-promised": "~7.1.1",
     "jsdoc-to-markdown": "^3.0.0",
     "mocha": "^4.0.1",
+    "np": "~2.16.0",
     "sinon": "^4.0.1",
     "sleep-promise": "^2.0.0"
   }
