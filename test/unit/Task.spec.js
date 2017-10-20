@@ -58,7 +58,7 @@ describe("Task", function() {
         });
     });
 
-    describe("type", function() {
+    describe("get:type", function() {
         it("defaults to 'normal'", function() {
             const task = new Task(NOOP);
             expect(task.type).to.equal(TASK_TYPE_NORMAL);
@@ -67,6 +67,26 @@ describe("Task", function() {
         it("returns the constructed type", function() {
             const task = new Task(NOOP, TASK_TYPE_HIGH_PRIORITY);
             expect(task.type).to.equal(TASK_TYPE_HIGH_PRIORITY);
+        });
+    });
+
+    describe("execute", function() {
+        beforeEach(function() {
+            this.task = new Task(NOOP);
+        });
+
+        it("returns a promise", function() {
+            const output = this.task.execute();
+            expect(output).to.be.an.instanceof(Promise);
+            return expect(output).to.be.eventually.fulfilled
+        });
+
+        it("returns a promise even if target throws", function() {
+            const task = new Task(() => {
+                throw new Error("Failure");
+            });
+            const output = this.task.execute();
+            return expect(output).to.be.eventually.fulfilled;
         });
     });
 

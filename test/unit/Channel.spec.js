@@ -95,6 +95,22 @@ describe("Channel", function() {
             this.channel.enqueue(NOOP);
             expect(this.channel.start.calledOnce).to.be.true;
         });
+
+        it("resolves with the result of the passed function", function() {
+            const fn = () => 123;
+            this.channel.autostart = true;
+            return this.channel.enqueue(fn).then(res => {
+                expect(res).to.equal(123);
+            });
+        });
+
+        it("resolves with the result of the passed promise", function() {
+            const prom = Promise.resolve("hello")
+            this.channel.autostart = true;
+            return this.channel.enqueue(prom).then(res => {
+                expect(res).to.equal("hello");
+            });
+        });
     });
 
     describe("retrieveNextItem", function() {
