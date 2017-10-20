@@ -39,10 +39,12 @@ describe("ChannelQueue", function() {
             expect(channel).to.equal(this.buttercupChannel);
         });
 
-        it("throws if the channel doesn't exist", function() {
+        it("returns a new channel if it doesn't exist", function() {
+            let output;
             expect(() => {
-                this.queue.channel("nothere");
-            }).to.throw(/channel doesn't exist/i);
+                output = this.queue.channel("nothere");
+            }).to.not.throw();
+            expect(output).to.be.an.instanceof(Channel);
         });
 
     });

@@ -18,12 +18,12 @@ class ChannelQueue extends EventEmitter {
             throw new Error(`Cannot create channel: channel already exists: ${name}`);
         }
         this.channels[name] = new Channel(name);
-        return this.channel(name);
+        return this.channels[name];
     }
 
     channel(name) {
         if (this.channelExists(name) !== true) {
-            throw new Error(`Cannot fetch channel: channel doesn't exist: ${name}`);
+            return this.createChannel(name);
         }
         return this.channels[name];
     }
