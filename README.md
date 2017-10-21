@@ -1,7 +1,7 @@
 # channel-queue
 A queue management library with channels.
 
-[![Build Status](https://travis-ci.org/buttercup/channel-queue.svg?branch=master)](https://travis-ci.org/buttercup/channel-queue)
+[![Build Status](https://travis-ci.org/buttercup/channel-queue.svg?branch=master)](https://travis-ci.org/buttercup/channel-queue) [![npm version](https://badge.fury.io/js/%40buttercup%2Fchannel-queue.svg)](https://www.npmjs.com/package/@buttercup/channel-queue)
 
 ## About
 
