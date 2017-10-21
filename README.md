@@ -57,6 +57,22 @@ const workChannel = queue.channel("work");
 workChannel.enqueue(runNearEnd, TASK_TYPE_TAIL);
 ```
 
+### Stacking
+Items can be "stacked", meaning that if specified, items can be limited to only 1 pending item in queue. All items of the same stack _name_ would simply queue on the same item and not create more tasks. The stack can be specified when enqueuing:
+
+```javascript
+const ChannelQueue = require("@buttercup/channel-queue");
+
+const queue = new ChannelQueue();
+const workChannel = queue.channel("work");
+
+const promise1 = workChannel.enqueue(saveWorkFn, undefined, /* Stack ID */ "save");
+// work start
+const promise2 = workChannel.enqueue(saveWorkFn, undefined, "save");
+const promise3 = workChannel.enqueue(saveWorkFn, undefined, "save");
+// promise2 and promise3 will be equal, as promise2 was still in the queue when promise3
+```
+
 ## Development & Supported Node Versions
 This library is intended to be used with NodeJS version **6** and later.
 
