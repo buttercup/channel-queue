@@ -67,6 +67,10 @@ class Channel extends EventEmitter {
         return this._autostart;
     }
 
+    get isEmpty() {
+        return !this.isRunning && this.tasks.length === 0;
+    }
+
     get isRunning() {
         return this._running;
     }
