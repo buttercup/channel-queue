@@ -1,12 +1,38 @@
+/**
+ * Normal task priority
+ * @type {String}
+ * @name TASK_TYPE_NORMAL
+ */
 const TASK_TYPE_NORMAL = "normal";
+/**
+ * High task priority
+ * @type {String}
+ * @name TASK_TYPE_HIGH_PRIORITY
+ */
 const TASK_TYPE_HIGH_PRIORITY = "high-priority";
+/**
+ * Task tail-priority
+ * @type {String}
+ * @name TASK_TYPE_TAIL
+ */
 const TASK_TYPE_TAIL = "tail";
+
+/**
+ * Task priority
+ * @typedef {TASK_TYPE_NORMAL|TASK_TYPE_HIGH_PRIORITY|TASK_TYPE_TAIL} TaskPriority
+ */
 
 /**
  * Internal Task class, for handling executions
  */
 class Task {
 
+    /**
+     * Constructor for a Task
+     * @param {Function|Promise} item The item to enqueue
+     * @param {TaskPriority=} type The priority to set
+     * @param {String=} stack The stack name
+     */
     constructor(item, type = TASK_TYPE_NORMAL, stack = null) {
         if (item instanceof Promise !== true && typeof item !== "function") {
             throw new Error("Invalid task item: Expected a Promise or Function");
@@ -24,26 +50,51 @@ class Task {
         this._created = now.getTime();
     }
 
+    /**
+     * Creation timestamp
+     * @type {Number}
+     * @readonly
+     */
     get created() {
         return this._created;
     }
 
+    /**
+     * Promise which resolves when work has completed
+     * @type {Promise}
+     */
     get queuedPromise() {
         return this._queuedPromise;
     }
 
+    /**
+     * The stack name
+     * @type {String}
+     */
     get stack() {
         return this._stack;
     }
 
+    /**
+     * The target function
+     * @type {Function}
+     */
     get target() {
         return this._target;
     }
 
+    /**
+     * The task priority type
+     * @type {TaskPriority}
+     */
     get type() {
         return this._type;
     }
 
+    /**
+     * Execute the task
+     * @returns {Promise}
+     */
     execute() {
         const fn = this.target;
         let output;

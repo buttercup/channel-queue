@@ -52,6 +52,10 @@ function compareTasks(taskA, taskB) {
  */
 class Channel extends EventEmitter {
 
+    /**
+     * Constructor for a Channel
+     * @param {String} name The name of the channel
+     */
     constructor(name) {
         super();
         if (typeof name !== "string" || name.length <= 0) {
@@ -63,18 +67,38 @@ class Channel extends EventEmitter {
         this._autostart = true;
     }
 
+    /**
+     * Whether the execution should start automatically or not
+     * Defaults to true
+     * @type {Boolean}
+     */
     get autostart() {
         return this._autostart;
     }
 
+    /**
+     * Whether the queue is empty or not
+     * @type {Boolean}
+     * @readonly
+     */
     get isEmpty() {
         return !this.isRunning && this.tasks.length === 0;
     }
 
+    /**
+     * Whether the queue is currently running or not
+     * @type {Boolean}
+     * @readonly
+     */
     get isRunning() {
         return this._running;
     }
 
+    /**
+     * Array of tasks (in queue)
+     * @type {Array.<Task>}
+     * @readonly
+     */
     get tasks() {
         return this._tasks;
     }
@@ -87,6 +111,14 @@ class Channel extends EventEmitter {
         this._running = isRunning;
     }
 
+    /**
+     * Enqueues a function
+     * @param {Function|Promise} item The item to place into the queue
+     * @param {TaskPriority=} type The task priority to use
+     * @param {String=} stack The stack name
+     * @returns {Promise} A promise that eventually resolves with the result from the
+     *  enqueued function or promise
+     */
     enqueue(item, type, stack = null) {
         if (stack) {
             const stackItems = this.getStackedItems(stack);
@@ -103,14 +135,27 @@ class Channel extends EventEmitter {
         return task.queuedPromise;
     }
 
+    /**
+     * Get all task items for a stack name
+     * @param {String} stack The stack name
+     * @returns {Array.<Task>} An array of task instances
+     */
     getStackedItems(stack) {
         return this.tasks.filter(task => task.stack && task.stack === stack);
     }
 
+    /**
+     * Get the next queued Task instance
+     * This modifies the task queue by removing the task
+     * @returns {Task|undefined} A task instance if there are any in queue
+     */
     retrieveNextItem() {
         return this.tasks.shift();
     }
 
+    /**
+     * Sort the tasks
+     */
     sort() {
         this.tasks.sort(compareTasks);
     }
@@ -119,6 +164,7 @@ class Channel extends EventEmitter {
      * Start processing the queue
      * Will automatically return early if queue has already started
      * @fires Channel#started
+     * @fires Channel#stopped
      * @returns {Boolean} Returns true if started, false if already started
      */
     start() {
