@@ -7,6 +7,8 @@ A queue management library with channels.
 
 This library provides a queue system, organised by channels (or "topics"), that allows for finer-grain control over asynchronous method execution. It allows for queuing tasks by channels (string-based names) - tasks executing sequentially when the previous task is done. It also allows for 3 priority levels : **normal**, **high** and **tail**.
 
+Check out the [API documentation](API.md).
+
 ## Installation
 
 Simply run:

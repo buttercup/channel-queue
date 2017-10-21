@@ -2,6 +2,9 @@ const TASK_TYPE_NORMAL = "normal";
 const TASK_TYPE_HIGH_PRIORITY = "high-priority";
 const TASK_TYPE_TAIL = "tail";
 
+/**
+ * Internal Task class, for handling executions
+ */
 class Task {
 
     constructor(item, type = TASK_TYPE_NORMAL, stack = null) {

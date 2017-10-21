@@ -2,6 +2,10 @@ const EventEmitter = require("eventemitter3");
 
 const Channel = require("./Channel.js");
 
+/**
+ * ChannelQueue class, for managing channels
+ * @augments EventEmitter
+ */
 class ChannelQueue extends EventEmitter {
 
     constructor() {

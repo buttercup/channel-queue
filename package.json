@@ -4,6 +4,7 @@
   "description": "A queue management library with channels",
   "main": "source/index.js",
   "scripts": {
+    "docs": "jsdoc2md source/*.js > API.md",
     "pub": "np",
     "test": "npm run test:unit",
     "test:unit": "mocha -r test/index.js 'test/unit/**/*.spec.js'"
