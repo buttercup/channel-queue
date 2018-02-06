@@ -27,17 +27,24 @@ class ParallelChannel extends Channel {
     }
 
     _runNextItem() {
+        const stopChannel = () => {
+            this.isRunning = false;
+            this.emit("stopped");
+        };
         let itemsToRun = this.parallelism - this.runningTasks.length;
         if (itemsToRun <= 0) {
             return;
         }
         if (this.runningTasks.length === 0 && this.tasks.length === 0) {
-            this.isRunning = false;
-            this.emit("stopped");
+            stopChannel();
         }
         while (itemsToRun > 0) {
             itemsToRun -= 1;
             const item = this.retrieveNextItem();
+            if (!item) {
+                stopChannel();
+                return;
+            }
             this.runningTasks.push(item);
             item
                 .execute()
