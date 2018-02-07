@@ -2,6 +2,15 @@ const ParallelChannel = require("../../source/ParallelChannel.js");
 
 const NOOP = () => {};
 
+function createStoppedPromise() {
+    let trigger;
+    const promise = new Promise(resolve => {
+        trigger = resolve;
+    });
+    promise.trigger = trigger;
+    return promise;
+}
+
 describe("ParallelChannel", function() {
 
     it("can be instantiated", function() {
@@ -34,6 +43,36 @@ describe("ParallelChannel", function() {
                 expect(out1).to.eventually.equal(1),
                 expect(out2).to.eventually.equal(2)
             ]);
+        });
+
+        it("can run tasks in parallel", function() {
+            let runOne = false,
+                runTwo = false;
+            const stoppedOne = createStoppedPromise();
+            const stoppedTwo = createStoppedPromise();
+            const exitOne = createStoppedPromise();
+            const exitTwo = createStoppedPromise();
+            this.channel.autostart = false;
+            this.channel.enqueue(() => {
+                runOne = true;
+                exitOne.trigger();
+                return stoppedOne;
+            });
+            this.channel.enqueue(() => {
+                runTwo = true;
+                exitTwo.trigger();
+                return stoppedTwo;
+            });
+            expect(runOne).to.be.false;
+            expect(runTwo).to.be.false;
+            // start: both should trigger
+            this.channel.start();
+            return Promise
+                .all([exitOne, exitTwo])
+                .then(() => {
+                    expect(runOne).to.be.true;
+                    expect(runTwo).to.be.true;
+                });
         });
     });
 
