@@ -1,5 +1,9 @@
 const Channel = require("./Channel.js");
 
+/**
+ * ParallelChannel class (queue)
+ * @augments Channel
+ */
 class ParallelChannel extends Channel {
 
     constructor(...args) {
@@ -9,14 +13,29 @@ class ParallelChannel extends Channel {
         this.canRunAcrossTaskTypes = false;
     }
 
+    /**
+     * Whether the queue is empty or not
+     * @type {Boolean}
+     * @readonly
+     */
     get isEmpty() {
         return super.isEmpty && this._runningTasks.length <= 0;
     }
 
+    /**
+     * The amount of allowed parallel executed tasks
+     * @type {Number}
+     * @readonly
+     */
     get parallelism() {
         return this._parallelism;
     }
 
+    /**
+     * Get the currently running tasks
+     * @type {Array<Task>}
+     * @readonly
+     */
     get runningTasks() {
         return this._runningTasks;
     }

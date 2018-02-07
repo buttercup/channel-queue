@@ -25,6 +25,21 @@ describe("ParallelChannel", function() {
         }).to.throw(/Invalid or empty/i);
     });
 
+    describe("get:isEmpty", function() {
+        it("detects empty channels", function() {
+            const channel = new ParallelChannel("test");
+            expect(channel.isEmpty).to.be.true;
+        });
+
+        it("detects non-empty channels", function() {
+            const channel = new ParallelChannel("test");
+            channel.autostart = false;
+            channel.enqueue(NOOP);
+            channel.enqueue(NOOP);
+            expect(channel.isEmpty).to.be.false;
+        });
+    });
+
     describe("enqueue", function() {
         beforeEach(function() {
             this.channel = new ParallelChannel("test", 2);
