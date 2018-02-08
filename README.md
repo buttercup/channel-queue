@@ -75,6 +75,24 @@ const promise3 = workChannel.enqueue(saveWorkFn, undefined, "save");
 // promise2 and promise3 will be equal, as promise2 was still in the queue when promise3
 ```
 
+### Parallel Execution
+Tasks can be run in parallel using the `ParallelChannel` class. You can create a parallel channel, in place of a regular channel, by calling `ChannelQueue#createParallelChannel`:
+
+```javascript
+const ChannelQueue = require("@buttercup/channel-queue");
+
+const queue = new ChannelQueue();
+const workChannel = queue.createParallelChannel("work");
+workChannel.enqueue(someTask);
+
+// The same channel can be fetched later using the familiar channel() method:
+queue.channel("work"); // The parallel channel
+```
+
+Parallel channels, like their name implies, can run tasks in parallel. Instead of running them head-to-tail like regular channels, parallel channels can execute many tasks side-by-side. You can also limit them to a certain number of _threads_ (default is 2) by calling `queue.createParallelChannel("name", 5)` (where `5` is the maximum number of simultaneous tasks).
+
+Parallel channels by default do not run tasks of different priorities simultaneously. This means that if the current running tasks are high-priority, no normal priority tasks will be started. This feature can be disabled by running `parallelChannel.canRunAcrossTaskTypes = true`.
+
 ## Development & Supported Node Versions
 This library is intended to be used with NodeJS version **6** and later.
 
