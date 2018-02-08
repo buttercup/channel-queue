@@ -56,8 +56,19 @@ class ParallelChannel extends Channel {
         }
         if (this.runningTasks.length === 0 && this.tasks.length === 0) {
             stopChannel();
+            return;
         }
         while (itemsToRun > 0) {
+            // First check to see if any other tasks are running, and whether or not
+            // we're allowed to run tasks of different priorities at the same time
+            if (!this.canRunAcrossTaskTypes && this.runningTasks.length > 0 && this.tasks.length > 0) {
+                const runningType = this.runningTasks[0].type;
+                const nextType = this.tasks[0].type;
+                if (runningType !== nextType) {
+                    // Next item is not of the same type, so we'll skip this round
+                    return;
+                }
+            }
             itemsToRun -= 1;
             const item = this.retrieveNextItem();
             if (!item) {
