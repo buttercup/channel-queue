@@ -1,13 +1,20 @@
+const sleep = require("sleep-promise");
 const ParallelChannel = require("../../source/ParallelChannel.js");
+const Task = require("../../source/Task.js");
+
+const {
+    TASK_TYPE_HIGH_PRIORITY,
+    TASK_TYPE_NORMAL
+} = Task;
 
 const NOOP = () => {};
 
 function createStoppedPromise() {
-    let trigger;
+    let release;
     const promise = new Promise(resolve => {
-        trigger = resolve;
+        release = resolve;
     });
-    promise.trigger = trigger;
+    promise.release = release;
     return promise;
 }
 
@@ -70,12 +77,12 @@ describe("ParallelChannel", function() {
             this.channel.autostart = false;
             this.channel.enqueue(() => {
                 runOne = true;
-                exitOne.trigger();
+                exitOne.release();
                 return stoppedOne;
             });
             this.channel.enqueue(() => {
                 runTwo = true;
-                exitTwo.trigger();
+                exitTwo.release();
                 return stoppedTwo;
             });
             expect(runOne).to.be.false;
@@ -88,6 +95,49 @@ describe("ParallelChannel", function() {
                     expect(runOne).to.be.true;
                     expect(runTwo).to.be.true;
                 });
+        });
+
+        it("obeys cross-priority limitations (canRunAcrossTaskTypes)", function() {
+            const stopped1 = createStoppedPromise();
+            const run1 = sinon.spy();
+            const run2 = sinon.spy();
+            return Promise.all([
+                this.channel.enqueue(() => {
+                    run1();
+                    return stopped1;
+                }, TASK_TYPE_HIGH_PRIORITY),
+                this.channel.enqueue(run2, TASK_TYPE_NORMAL),
+                sleep(150)
+                    .then(() => {
+                        expect(run1.calledOnce).to.be.true;
+                        expect(run2.notCalled).to.be.true;
+                        stopped1.release();
+                        return sleep(150);
+                    })
+                    .then(() => {
+                        expect(run2.calledOnce).to.be.true;
+                    })
+            ]);
+        });
+
+        it("supports enabling canRunAcrossTaskTypes", function() {
+            this.channel.canRunAcrossTaskTypes = true;
+            const stopped1 = createStoppedPromise();
+            const run1 = sinon.spy();
+            const run2 = sinon.spy();
+            return Promise.all([
+                this.channel.enqueue(() => {
+                    run1();
+                    return stopped1;
+                }, TASK_TYPE_HIGH_PRIORITY),
+                this.channel.enqueue(run2, TASK_TYPE_NORMAL),
+                sleep(150)
+                    .then(() => {
+                        expect(run1.calledOnce).to.be.true;
+                        expect(run2.calledOnce).to.be.true;
+                        stopped1.release();
+                    })
+            ]);
         });
     });
 
