@@ -1,6 +1,7 @@
 const EventEmitter = require("eventemitter3");
 
 const Channel = require("./Channel.js");
+const ParallelChannel = require("./ParallelChannel.js");
 
 /**
  * ChannelQueue class, for managing channels
@@ -33,6 +34,25 @@ class ChannelQueue extends EventEmitter {
         }
         this.channels[name] = new Channel(name);
         return this.channels[name];
+    }
+
+    /**
+     * Create a new parallel channel
+     * Creates a special channel that supports running several tasks in parallel.
+     * @param {String} name The name of the channel
+     * @param {Number=} parallelism Optional number of maximum parallel tasks
+     * @returns {ParallelChannel} The new channel
+     * @throws {Error} Throws if the channel already exists
+     */
+    createParallelChannel(name, parallelism) {
+        if (this.channelExists(name)) {
+            throw new Error(`Cannot create channel: channel already exists: ${name}`);
+        }
+        const channel = this.channels[name] = new ParallelChannel(name);
+        if (parallelism) {
+            channel.parallelism = parallelism;
+        }
+        return channel;
     }
 
     /**

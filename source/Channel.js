@@ -171,21 +171,22 @@ class Channel extends EventEmitter {
         if (this.isRunning) {
             return false;
         }
-        const runNextItem = () => {
-            const item = this.retrieveNextItem();
-            if (!item) {
-                this.isRunning = false;
-                this.emit("stopped");
-            } else {
-                item
-                    .execute()
-                    .then(() => runNextItem());
-            }
-        };
         this.emit("started");
         this.isRunning = true;
-        setTimeout(() => runNextItem(), 0);
+        setTimeout(() => this._runNextItem(), 0);
         return true;
+    }
+
+    _runNextItem() {
+        const item = this.retrieveNextItem();
+        if (!item) {
+            this.isRunning = false;
+            this.emit("stopped");
+        } else {
+            item
+                .execute()
+                .then(() => this._runNextItem());
+        }
     }
 
 }
