@@ -93,6 +93,14 @@ Parallel channels, like their name implies, can run tasks in parallel. Instead o
 
 Parallel channels by default do not run tasks of different priorities simultaneously. This means that if the current running tasks are high-priority, no normal priority tasks will be started. This feature can be disabled by running `parallelChannel.canRunAcrossTaskTypes = true`.
 
+### Clearing
+
+You can clear all enqueued items in a `Channel` by calling `clear()`:
+
+```javascript
+queue.channel("myChannel").clear();
+```
+
 ## Development & Supported Node Versions
 This library is intended to be used with NodeJS version **6** and later.
 
