@@ -31,6 +31,20 @@ describe("Channel", function() {
         }).to.throw(/Invalid or empty/i);
     });
 
+    describe("clear", function() {
+        beforeEach(function() {
+            this.channel = new Channel("test");
+            this.channel.autostart = false;
+            this.channel.enqueue(() => {});
+            this.channel.enqueue(() => {});
+        });
+
+        it("removes all items from the queue", function() {
+            this.channel.clear();
+            expect(this.channel.tasks).to.have.lengthOf(0);
+        });
+    });
+
     describe("enqueue", function() {
         beforeEach(function() {
             this.channel = new Channel("test");

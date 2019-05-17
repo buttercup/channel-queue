@@ -55,6 +55,7 @@ class Channel extends EventEmitter {
     /**
      * Constructor for a Channel
      * @param {String} name The name of the channel
+     * @memberof Channel
      */
     constructor(name) {
         super();
@@ -71,6 +72,7 @@ class Channel extends EventEmitter {
      * Whether the execution should start automatically or not
      * Defaults to true
      * @type {Boolean}
+     * @memberof Channel
      */
     get autostart() {
         return this._autostart;
@@ -80,6 +82,7 @@ class Channel extends EventEmitter {
      * Whether the queue is empty or not
      * @type {Boolean}
      * @readonly
+     * @memberof Channel
      */
     get isEmpty() {
         return !this.isRunning && this.tasks.length === 0;
@@ -89,6 +92,7 @@ class Channel extends EventEmitter {
      * Whether the queue is currently running or not
      * @type {Boolean}
      * @readonly
+     * @memberof Channel
      */
     get isRunning() {
         return this._running;
@@ -98,6 +102,7 @@ class Channel extends EventEmitter {
      * Array of tasks (in queue)
      * @type {Array.<Task>}
      * @readonly
+     * @memberof Channel
      */
     get tasks() {
         return this._tasks;
@@ -112,12 +117,21 @@ class Channel extends EventEmitter {
     }
 
     /**
+     * Remove all pending tasks from the channel
+     * @memberof Channel
+     */
+    clear() {
+        this.tasks.splice(0, Infinity);
+    }
+
+    /**
      * Enqueues a function
      * @param {Function|Promise} item The item to place into the queue
      * @param {TaskPriority=} type The task priority to use
      * @param {String=} stack The stack name
      * @returns {Promise} A promise that eventually resolves with the result from the
      *  enqueued function or promise
+     * @memberof Channel
      */
     enqueue(item, type, stack = null) {
         if (stack) {
@@ -139,6 +153,7 @@ class Channel extends EventEmitter {
      * Get all task items for a stack name
      * @param {String} stack The stack name
      * @returns {Array.<Task>} An array of task instances
+     * @memberof Channel
      */
     getStackedItems(stack) {
         return this.tasks.filter(task => task.stack && task.stack === stack);
@@ -148,6 +163,7 @@ class Channel extends EventEmitter {
      * Get the next queued Task instance
      * This modifies the task queue by removing the task
      * @returns {Task|undefined} A task instance if there are any in queue
+     * @memberof Channel
      */
     retrieveNextItem() {
         return this.tasks.shift();
@@ -155,6 +171,7 @@ class Channel extends EventEmitter {
 
     /**
      * Sort the tasks
+     * @memberof Channel
      */
     sort() {
         this.tasks.sort(compareTasks);
@@ -166,6 +183,7 @@ class Channel extends EventEmitter {
      * @fires Channel#started
      * @fires Channel#stopped
      * @returns {Boolean} Returns true if started, false if already started
+     * @memberof Channel
      */
     start() {
         if (this.isRunning) {
