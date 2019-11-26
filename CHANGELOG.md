@@ -1,5 +1,10 @@
 # Channel Queue changelog
 
+## v0.5.0
+_2019-11-26_
+
+ * `Channel#clear(priorityType)` for clearing only items with a certain priority type
+
 ## v0.4.0
 _2019-05-17_
 

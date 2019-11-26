@@ -51,7 +51,7 @@ Channel class (queue)
     * [.isEmpty](#Channel+isEmpty) : <code>Boolean</code>
     * [.isRunning](#Channel+isRunning) : <code>Boolean</code>
     * [.tasks](#Channel+tasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
-    * [.clear()](#Channel+clear)
+    * [.clear([priorityType])](#Channel+clear)
     * [.enqueue(item, [type], [stack])](#Channel+enqueue) ⇒ <code>Promise</code>
     * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
     * [.retrieveNextItem()](#Channel+retrieveNextItem) ⇒ [<code>Task</code>](#Task) \| <code>undefined</code>
@@ -98,10 +98,15 @@ Array of tasks (in queue)
 **Read only**: true  
 <a name="Channel+clear"></a>
 
-### channel.clear()
+### channel.clear([priorityType])
 Remove all pending tasks from the channel
 
 **Kind**: instance method of [<code>Channel</code>](#Channel)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [priorityType] | <code>String</code> | Optional priority type to clear  only tasks with a certain priority value |
+
 <a name="Channel+enqueue"></a>
 
 ### channel.enqueue(item, [type], [stack]) ⇒ <code>Promise</code>
@@ -247,7 +252,7 @@ ParallelChannel class (queue)
     * [.autostart](#Channel+autostart) : <code>Boolean</code>
     * [.isRunning](#Channel+isRunning) : <code>Boolean</code>
     * [.tasks](#Channel+tasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
-    * [.clear()](#Channel+clear)
+    * [.clear([priorityType])](#Channel+clear)
     * [.enqueue(item, [type], [stack])](#Channel+enqueue) ⇒ <code>Promise</code>
     * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
     * [.retrieveNextItem()](#Channel+retrieveNextItem) ⇒ [<code>Task</code>](#Task) \| <code>undefined</code>
@@ -299,10 +304,15 @@ Array of tasks (in queue)
 **Read only**: true  
 <a name="Channel+clear"></a>
 
-### parallelChannel.clear()
+### parallelChannel.clear([priorityType])
 Remove all pending tasks from the channel
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [priorityType] | <code>String</code> | Optional priority type to clear  only tasks with a certain priority value |
+
 <a name="Channel+enqueue"></a>
 
 ### parallelChannel.enqueue(item, [type], [stack]) ⇒ <code>Promise</code>
