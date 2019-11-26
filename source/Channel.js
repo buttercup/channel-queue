@@ -118,10 +118,20 @@ class Channel extends EventEmitter {
 
     /**
      * Remove all pending tasks from the channel
+     * @param {String=} priorityType Optional priority type to clear
+     *  only tasks with a certain priority value
      * @memberof Channel
      */
-    clear() {
-        this.tasks.splice(0, Infinity);
+    clear(priorityType) {
+        if (!priorityType) {
+            this.tasks.splice(0, Infinity);
+            return;
+        }
+        for (let i = this.tasks.length - 1; i >= 0; i -= 1) {
+            if (this.tasks[i].type === priorityType) {
+                this.tasks.splice(i, 1);
+            }
+        }
     }
 
     /**
