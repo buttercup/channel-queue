@@ -36,12 +36,19 @@ describe("Channel", function() {
             this.channel = new Channel("test");
             this.channel.autostart = false;
             this.channel.enqueue(() => {});
+            this.channel.enqueue(() => {}, TASK_TYPE_HIGH_PRIORITY);
             this.channel.enqueue(() => {});
+            this.channel.enqueue(() => {}, TASK_TYPE_HIGH_PRIORITY);
         });
 
         it("removes all items from the queue", function() {
             this.channel.clear();
             expect(this.channel.tasks).to.have.lengthOf(0);
+        });
+
+        it("can remove only items with a certain priority", function() {
+            this.channel.clear(TASK_TYPE_HIGH_PRIORITY);
+            expect(this.channel.tasks).to.have.lengthOf(2);
         });
     });
 
