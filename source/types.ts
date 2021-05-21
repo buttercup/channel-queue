@@ -18,5 +18,5 @@ export enum TaskPriority {
     /**
      * Task tail-priority
      */
-    Tail = "tail",
+    Tail = "tail"
 }

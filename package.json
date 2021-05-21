@@ -7,14 +7,27 @@
   "scripts": {
     "build": "tsc",
     "docs": "npm run build && jsdoc2md dist/*.js > API.md",
+    "format": "prettier --write \"{source,test}/**/*.{js,ts}\"",
     "prepublishOnly": "npm run build",
     "pretest": "npm run build",
-    "test": "npm run test:unit",
+    "test": "npm run test:unit && npm run test:format",
+    "test:format": "prettier --check \"{source,test}/**/*.js\"",
     "test:unit": "mocha -r test/index.js 'test/unit/**/*.spec.js'"
   },
   "files": [
     "dist/**/*"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "{source,test}/**/*.{js,ts}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/buttercup/channel-queue.git"
@@ -39,8 +52,11 @@
   "devDependencies": {
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
+    "husky": "^4.3.8",
     "jsdoc-to-markdown": "^7.0.1",
+    "lint-staged": "^11.0.0",
     "mocha": "^8.4.0",
+    "prettier": "^1.19.1",
     "sinon": "^10.0.0",
     "sleep-promise": "^9.1.0",
     "typescript": "^4.2.4"

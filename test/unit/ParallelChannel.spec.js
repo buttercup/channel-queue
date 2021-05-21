@@ -5,33 +5,33 @@ const NOOP = () => {};
 
 function createStoppedPromise() {
     let release;
-    const promise = new Promise((resolve) => {
+    const promise = new Promise(resolve => {
         release = resolve;
     });
     promise.release = release;
     return promise;
 }
 
-describe("ParallelChannel", function () {
-    it("can be instantiated", function () {
+describe("ParallelChannel", function() {
+    it("can be instantiated", function() {
         expect(() => {
             new ParallelChannel("test");
         }).to.not.throw();
     });
 
-    it("throws if no name provided", function () {
+    it("throws if no name provided", function() {
         expect(() => {
             new ParallelChannel();
         }).to.throw(/Invalid or empty/i);
     });
 
-    describe("get:isEmpty", function () {
-        it("detects empty channels", function () {
+    describe("get:isEmpty", function() {
+        it("detects empty channels", function() {
             const channel = new ParallelChannel("test");
             expect(channel.isEmpty).to.be.true;
         });
 
-        it("detects non-empty channels", function () {
+        it("detects non-empty channels", function() {
             const channel = new ParallelChannel("test");
             channel.autostart = false;
             channel.enqueue(NOOP);
@@ -40,24 +40,27 @@ describe("ParallelChannel", function () {
         });
     });
 
-    describe("enqueue", function () {
-        beforeEach(function () {
+    describe("enqueue", function() {
+        beforeEach(function() {
             this.channel = new ParallelChannel("test", 2);
         });
 
-        it("returns a promise", function () {
+        it("returns a promise", function() {
             const result = this.channel.enqueue(NOOP);
             expect(result).to.be.an.instanceof(Promise);
             return result;
         });
 
-        it("enqueues and completes tasks", function () {
+        it("enqueues and completes tasks", function() {
             const out1 = this.channel.enqueue(() => 1);
             const out2 = this.channel.enqueue(() => Promise.resolve(2));
-            return Promise.all([expect(out1).to.eventually.equal(1), expect(out2).to.eventually.equal(2)]);
+            return Promise.all([
+                expect(out1).to.eventually.equal(1),
+                expect(out2).to.eventually.equal(2)
+            ]);
         });
 
-        it("can run tasks in parallel", function () {
+        it("can run tasks in parallel", function() {
             let runOne = false,
                 runTwo = false;
             const stoppedOne = createStoppedPromise();
@@ -85,7 +88,7 @@ describe("ParallelChannel", function () {
             });
         });
 
-        it("obeys cross-priority limitations (canRunAcrossTaskTypes)", function () {
+        it("obeys cross-priority limitations (canRunAcrossTaskTypes)", function() {
             const stopped1 = createStoppedPromise();
             const run1 = sinon.spy();
             const run2 = sinon.spy();
@@ -104,11 +107,11 @@ describe("ParallelChannel", function () {
                     })
                     .then(() => {
                         expect(run2.calledOnce).to.be.true;
-                    }),
+                    })
             ]);
         });
 
-        it("supports enabling canRunAcrossTaskTypes", function () {
+        it("supports enabling canRunAcrossTaskTypes", function() {
             this.channel.canRunAcrossTaskTypes = true;
             const stopped1 = createStoppedPromise();
             const run1 = sinon.spy();
@@ -123,7 +126,7 @@ describe("ParallelChannel", function () {
                     expect(run1.calledOnce).to.be.true;
                     expect(run2.calledOnce).to.be.true;
                     stopped1.release();
-                }),
+                })
             ]);
         });
     });

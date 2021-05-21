@@ -65,7 +65,11 @@ export class ParallelChannel extends Channel {
         while (itemsToRun > 0) {
             // First check to see if any other tasks are running, and whether or not
             // we're allowed to run tasks of different priorities at the same time
-            if (!this.canRunAcrossTaskTypes && this.runningTasks.length > 0 && this.tasks.length > 0) {
+            if (
+                !this.canRunAcrossTaskTypes &&
+                this.runningTasks.length > 0 &&
+                this.tasks.length > 0
+            ) {
                 const runningType = this.runningTasks[0].type;
                 const nextType = this.tasks[0].type;
                 if (runningType !== nextType) {

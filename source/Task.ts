@@ -18,7 +18,11 @@ export class Task {
      * @param {TaskPriority=} type The priority to set
      * @param {String=} stack The stack name
      */
-    constructor(item: Callable<any>, type: TaskPriority = TaskPriority.Normal, stack?: string | null) {
+    constructor(
+        item: Callable<any>,
+        type: TaskPriority = TaskPriority.Normal,
+        stack?: string | null
+    ) {
         if (item instanceof Promise !== true && typeof item !== "function") {
             throw new Error("Invalid task item: Expected a Promise or Function");
         }
@@ -91,10 +95,10 @@ export class Task {
         }
         const chainOutput = output instanceof Promise ? output : Promise.resolve(output);
         return chainOutput
-            .then((result) => {
+            .then(result => {
                 this._resolveFn?.(result);
             })
-            .catch((err) => {
+            .catch(err => {
                 this._rejectFn?.(err);
             });
     }

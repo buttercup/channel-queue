@@ -164,7 +164,7 @@ export class Channel extends EventEmitter {
      * @memberof Channel
      */
     getStackedItems(stack: string): Task[] {
-        return this.tasks.filter((task) => task.stack && task.stack === stack);
+        return this.tasks.filter(task => task.stack && task.stack === stack);
     }
 
     /**
