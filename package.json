@@ -12,6 +12,9 @@
     "test": "npm run test:unit",
     "test:unit": "mocha -r test/index.js 'test/unit/**/*.spec.js'"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/buttercup/channel-queue.git"
