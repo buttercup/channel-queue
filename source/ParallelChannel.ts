@@ -1,13 +1,17 @@
-const Channel = require("./Channel.js");
+import { Channel } from "./Channel";
+import { Task } from "./Task";
 
 /**
  * ParallelChannel class (queue)
  * @augments Channel
  */
-class ParallelChannel extends Channel {
+export class ParallelChannel extends Channel {
+    private _parallelism: number;
+    private _runningTasks: Task[];
+    canRunAcrossTaskTypes: boolean;
 
-    constructor(...args) {
-        super(...args);
+    constructor(name: string) {
+        super(name);
         this._parallelism = 2;
         this._runningTasks = [];
         this.canRunAcrossTaskTypes = false;
@@ -76,15 +80,10 @@ class ParallelChannel extends Channel {
                 return;
             }
             this.runningTasks.push(item);
-            item
-                .execute()
-                .then(() => {
-                    this.runningTasks.splice(this.runningTasks.indexOf(item), 1);
-                    this._runNextItem();
-                });
+            item.execute().then(() => {
+                this.runningTasks.splice(this.runningTasks.indexOf(item), 1);
+                this._runNextItem();
+            });
         }
     }
-
 }
-
-module.exports = ParallelChannel;

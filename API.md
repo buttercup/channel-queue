@@ -15,25 +15,11 @@
 </dd>
 </dl>
 
-## Members
-
-<dl>
-<dt><a href="#TASK_TYPE_NORMAL">TASK_TYPE_NORMAL</a> : <code>String</code></dt>
-<dd><p>Normal task priority</p>
-</dd>
-<dt><a href="#TASK_TYPE_HIGH_PRIORITY">TASK_TYPE_HIGH_PRIORITY</a> : <code>String</code></dt>
-<dd><p>High task priority</p>
-</dd>
-<dt><a href="#TASK_TYPE_TAIL">TASK_TYPE_TAIL</a> : <code>String</code></dt>
-<dd><p>Task tail-priority</p>
-</dd>
-</dl>
-
 ## Typedefs
 
 <dl>
-<dt><a href="#TaskPriority">TaskPriority</a> : <code><a href="#TASK_TYPE_NORMAL">TASK_TYPE_NORMAL</a></code> | <code><a href="#TASK_TYPE_HIGH_PRIORITY">TASK_TYPE_HIGH_PRIORITY</a></code> | <code><a href="#TASK_TYPE_TAIL">TASK_TYPE_TAIL</a></code></dt>
-<dd><p>Task priority</p>
+<dt><a href="#TaskPriority">TaskPriority</a> : <code><a href="#TaskPriority.Normal">Normal</a></code> | <code><a href="#TaskPriority.High">High</a></code> | <code><a href="#TaskPriority.Tail">Tail</a></code></dt>
+<dd><p>Task Priority</p>
 </dd>
 </dl>
 
@@ -50,10 +36,10 @@ Channel class (queue)
     * [.autostart](#Channel+autostart) : <code>Boolean</code>
     * [.isEmpty](#Channel+isEmpty) : <code>Boolean</code>
     * [.isRunning](#Channel+isRunning) : <code>Boolean</code>
-    * [.tasks](#Channel+tasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
+    * [.tasks](#Channel+tasks) : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
     * [.clear([priorityType])](#Channel+clear)
     * [.enqueue(item, [type], [stack])](#Channel+enqueue) ⇒ <code>Promise</code>
-    * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
+    * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
     * [.retrieveNextItem()](#Channel+retrieveNextItem) ⇒ [<code>Task</code>](#Task) \| <code>undefined</code>
     * [.sort()](#Channel+sort)
     * [.start()](#Channel+start) ⇒ <code>Boolean</code>
@@ -91,7 +77,7 @@ Whether the queue is currently running or not
 **Read only**: true  
 <a name="Channel+tasks"></a>
 
-### channel.tasks : [<code>Array.&lt;Task&gt;</code>](#Task)
+### channel.tasks : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
 Array of tasks (in queue)
 
 **Kind**: instance property of [<code>Channel</code>](#Channel)  
@@ -116,19 +102,19 @@ Enqueues a function
 **Returns**: <code>Promise</code> - A promise that eventually resolves with the result from the
  enqueued function or promise  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| item | <code>function</code> \| <code>Promise</code> |  | The item to place into the queue |
-| [type] | [<code>TaskPriority</code>](#TaskPriority) |  | The task priority to use |
-| [stack] | <code>String</code> | <code></code> | The stack name |
+| Param | Type | Description |
+| --- | --- | --- |
+| item | <code>function</code> \| <code>Promise</code> | The item to place into the queue |
+| [type] | [<code>TaskPriority</code>](#TaskPriority) | The task priority to use |
+| [stack] | <code>String</code> | The stack name |
 
 <a name="Channel+getStackedItems"></a>
 
-### channel.getStackedItems(stack) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
+### channel.getStackedItems(stack) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
 Get all task items for a stack name
 
 **Kind**: instance method of [<code>Channel</code>](#Channel)  
-**Returns**: [<code>Array.&lt;Task&gt;</code>](#Task) - An array of task instances  
+**Returns**: [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task) - An array of task instances  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -248,13 +234,13 @@ ParallelChannel class (queue)
 * [ParallelChannel](#ParallelChannel) ⇐ [<code>Channel</code>](#Channel)
     * [.isEmpty](#ParallelChannel+isEmpty) : <code>Boolean</code>
     * [.parallelism](#ParallelChannel+parallelism) : <code>Number</code>
-    * [.runningTasks](#ParallelChannel+runningTasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
+    * [.runningTasks](#ParallelChannel+runningTasks) : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
     * [.autostart](#Channel+autostart) : <code>Boolean</code>
     * [.isRunning](#Channel+isRunning) : <code>Boolean</code>
-    * [.tasks](#Channel+tasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
+    * [.tasks](#Channel+tasks) : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
     * [.clear([priorityType])](#Channel+clear)
     * [.enqueue(item, [type], [stack])](#Channel+enqueue) ⇒ <code>Promise</code>
-    * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
+    * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
     * [.retrieveNextItem()](#Channel+retrieveNextItem) ⇒ [<code>Task</code>](#Task) \| <code>undefined</code>
     * [.sort()](#Channel+sort)
     * [.start()](#Channel+start) ⇒ <code>Boolean</code>
@@ -276,7 +262,7 @@ The amount of allowed parallel executed tasks
 **Read only**: true  
 <a name="ParallelChannel+runningTasks"></a>
 
-### parallelChannel.runningTasks : [<code>Array.&lt;Task&gt;</code>](#Task)
+### parallelChannel.runningTasks : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
 Get the currently running tasks
 
 **Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
@@ -297,7 +283,7 @@ Whether the queue is currently running or not
 **Read only**: true  
 <a name="Channel+tasks"></a>
 
-### parallelChannel.tasks : [<code>Array.&lt;Task&gt;</code>](#Task)
+### parallelChannel.tasks : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
 Array of tasks (in queue)
 
 **Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
@@ -322,19 +308,19 @@ Enqueues a function
 **Returns**: <code>Promise</code> - A promise that eventually resolves with the result from the
  enqueued function or promise  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| item | <code>function</code> \| <code>Promise</code> |  | The item to place into the queue |
-| [type] | [<code>TaskPriority</code>](#TaskPriority) |  | The task priority to use |
-| [stack] | <code>String</code> | <code></code> | The stack name |
+| Param | Type | Description |
+| --- | --- | --- |
+| item | <code>function</code> \| <code>Promise</code> | The item to place into the queue |
+| [type] | [<code>TaskPriority</code>](#TaskPriority) | The task priority to use |
+| [stack] | <code>String</code> | The stack name |
 
 <a name="Channel+getStackedItems"></a>
 
-### parallelChannel.getStackedItems(stack) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
+### parallelChannel.getStackedItems(stack) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
 Get all task items for a stack name
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
-**Returns**: [<code>Array.&lt;Task&gt;</code>](#Task) - An array of task instances  
+**Returns**: [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task) - An array of task instances  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -385,11 +371,11 @@ Internal Task class, for handling executions
 Constructor for a Task
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| item | <code>function</code> \| <code>Promise</code> |  | The item to enqueue |
-| [type] | [<code>TaskPriority</code>](#TaskPriority) |  | The priority to set |
-| [stack] | <code>String</code> | <code></code> | The stack name |
+| Param | Type | Description |
+| --- | --- | --- |
+| item | <code>function</code> \| <code>Promise</code> | The item to enqueue |
+| [type] | [<code>TaskPriority</code>](#TaskPriority) | The priority to set |
+| [stack] | <code>String</code> | The stack name |
 
 <a name="Task+created"></a>
 
@@ -428,27 +414,33 @@ The task priority type
 Execute the task
 
 **Kind**: instance method of [<code>Task</code>](#Task)  
-<a name="TASK_TYPE_NORMAL"></a>
-
-## TASK_TYPE_NORMAL : <code>String</code>
-Normal task priority
-
-**Kind**: global variable  
-<a name="TASK_TYPE_HIGH_PRIORITY"></a>
-
-## TASK_TYPE_HIGH_PRIORITY : <code>String</code>
-High task priority
-
-**Kind**: global variable  
-<a name="TASK_TYPE_TAIL"></a>
-
-## TASK_TYPE_TAIL : <code>String</code>
-Task tail-priority
-
-**Kind**: global variable  
 <a name="TaskPriority"></a>
 
-## TaskPriority : [<code>TASK_TYPE_NORMAL</code>](#TASK_TYPE_NORMAL) \| [<code>TASK_TYPE_HIGH_PRIORITY</code>](#TASK_TYPE_HIGH_PRIORITY) \| [<code>TASK_TYPE_TAIL</code>](#TASK_TYPE_TAIL)
-Task priority
+## TaskPriority : [<code>Normal</code>](#TaskPriority.Normal) \| [<code>High</code>](#TaskPriority.High) \| [<code>Tail</code>](#TaskPriority.Tail)
+Task Priority
 
 **Kind**: global typedef  
+
+* [TaskPriority](#TaskPriority) : [<code>Normal</code>](#TaskPriority.Normal) \| [<code>High</code>](#TaskPriority.High) \| [<code>Tail</code>](#TaskPriority.Tail)
+    * [.Normal](#TaskPriority.Normal)
+    * [.High](#TaskPriority.High)
+    * [.Tail](#TaskPriority.Tail)
+
+<a name="TaskPriority.Normal"></a>
+
+### TaskPriority.Normal
+Normal task priority
+
+**Kind**: static property of [<code>TaskPriority</code>](#TaskPriority)  
+<a name="TaskPriority.High"></a>
+
+### TaskPriority.High
+High task priority
+
+**Kind**: static property of [<code>TaskPriority</code>](#TaskPriority)  
+<a name="TaskPriority.Tail"></a>
+
+### TaskPriority.Tail
+Task tail-priority
+
+**Kind**: static property of [<code>TaskPriority</code>](#TaskPriority)  

@@ -21,7 +21,7 @@ npm install @buttercup/channel-queue --save
 The simplest usage is to just queue some tasks:
 
 ```javascript
-const ChannelQueue = require("@buttercup/channel-queue");
+import { ChannelQueue } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
 const work = queue.channel("myChannel").enqueue(() => 123);
@@ -36,13 +36,12 @@ someChannel.enqueue(job3);
 You can push tasks above others by setting them as high-priority:
 
 ```javascript
-const ChannelQueue = require("@buttercup/channel-queue");
-const { TASK_TYPE_HIGH_PRIORITY } = ChannelQueue.Task;
+import { ChannelQueue, TaskPriority } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
 const workChannel = queue.channel("work");
 // some other tasks added to the queue...
-workChannel.enqueue(importantJobMethod, TASK_TYPE_HIGH_PRIORITY).then(result => {
+workChannel.enqueue(importantJobMethod, TaskPriority.High).then(result => {
     // 'result' is the resolved result from the 'importantJobMethod' function
 });
 ```
@@ -50,20 +49,19 @@ workChannel.enqueue(importantJobMethod, TASK_TYPE_HIGH_PRIORITY).then(result => 
 Tasks can also be run as "low" priority or at the **tail** end of the queue:
 
 ```javascript
-const ChannelQueue = require("@buttercup/channel-queue");
-const { TASK_TYPE_TAIL } = ChannelQueue.Task;
+import { ChannelQueue, TaskPriority } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
 const workChannel = queue.channel("work");
 // some other tasks added to the queue...
-workChannel.enqueue(runNearEnd, TASK_TYPE_TAIL);
+workChannel.enqueue(runNearEnd, TaskPriority.Tail);
 ```
 
 ### Stacking
 Items can be "stacked", meaning that if specified, items can be limited to only 1 pending item in queue. All items of the same stack _name_ would simply queue on the same item and not create more tasks. The stack can be specified when enqueuing:
 
 ```javascript
-const ChannelQueue = require("@buttercup/channel-queue");
+import { ChannelQueue } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
 const workChannel = queue.channel("work");
@@ -79,7 +77,7 @@ const promise3 = workChannel.enqueue(saveWorkFn, undefined, "save");
 Tasks can be run in parallel using the `ParallelChannel` class. You can create a parallel channel, in place of a regular channel, by calling `ChannelQueue#createParallelChannel`:
 
 ```javascript
-const ChannelQueue = require("@buttercup/channel-queue");
+import { ChannelQueue } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
 const workChannel = queue.createParallelChannel("work");

@@ -1,12 +1,6 @@
-const EventEmitter = require("eventemitter3");
-
-const Task = require("./Task.js");
-
-const {
-    TASK_TYPE_HIGH_PRIORITY,
-    TASK_TYPE_NORMAL,
-    TASK_TYPE_TAIL
-} = Task;
+import EventEmitter from "eventemitter3";
+import { Task } from "./Task";
+import { Callable, TaskPriority } from "./types";
 
 /**
  * Compare two tasks for sorting
@@ -17,20 +11,20 @@ const {
  * @static
  * @memberof Channel
  */
-function compareTasks(taskA, taskB) {
+function compareTasks(taskA: Task, taskB: Task): number {
     const { type: typeA, created: createdA } = taskA;
     const { type: typeB, created: createdB } = taskB;
     // Sort by priority:
-    if (typeA === TASK_TYPE_HIGH_PRIORITY && typeB !== TASK_TYPE_HIGH_PRIORITY) {
+    if (typeA === TaskPriority.High && typeB !== TaskPriority.High) {
         // A is high priority, and B isn't
         return -1;
-    } else if (typeB === TASK_TYPE_HIGH_PRIORITY && typeA !== TASK_TYPE_HIGH_PRIORITY) {
+    } else if (typeB === TaskPriority.High && typeA !== TaskPriority.High) {
         // B is high priority, and A isn't
         return 1;
-    } else if (typeB === TASK_TYPE_TAIL && typeA !== TASK_TYPE_TAIL) {
+    } else if (typeB === TaskPriority.Tail && typeA !== TaskPriority.Tail) {
         // B is a tail-task, and A isn't
         return -1;
-    } else if (typeA === TASK_TYPE_TAIL && typeB !== TASK_TYPE_TAIL) {
+    } else if (typeA === TaskPriority.Tail && typeB !== TaskPriority.Tail) {
         // A is a tail-task, and B isn't
         return 1;
     }
@@ -50,14 +44,18 @@ function compareTasks(taskA, taskB) {
  * Channel class (queue)
  * @augments EventEmitter
  */
-class Channel extends EventEmitter {
+export class Channel extends EventEmitter {
+    private _name: string;
+    private _tasks: Task[];
+    private _running: boolean;
+    private _autostart: boolean;
 
     /**
      * Constructor for a Channel
      * @param {String} name The name of the channel
      * @memberof Channel
      */
-    constructor(name) {
+    constructor(name: string) {
         super();
         if (typeof name !== "string" || name.length <= 0) {
             throw new Error("Failed creating Channel: Invalid or empty name");
@@ -122,7 +120,7 @@ class Channel extends EventEmitter {
      *  only tasks with a certain priority value
      * @memberof Channel
      */
-    clear(priorityType) {
+    clear(priorityType: TaskPriority) {
         if (!priorityType) {
             this.tasks.splice(0, Infinity);
             return;
@@ -143,7 +141,7 @@ class Channel extends EventEmitter {
      *  enqueued function or promise
      * @memberof Channel
      */
-    enqueue(item, type, stack = null) {
+    enqueue<T>(item: Callable<T>, type: TaskPriority, stack?: string): Promise<T> {
         if (stack) {
             const stackItems = this.getStackedItems(stack);
             if (stackItems.length > 0) {
@@ -165,8 +163,8 @@ class Channel extends EventEmitter {
      * @returns {Array.<Task>} An array of task instances
      * @memberof Channel
      */
-    getStackedItems(stack) {
-        return this.tasks.filter(task => task.stack && task.stack === stack);
+    getStackedItems(stack: string): Task[] {
+        return this.tasks.filter((task) => task.stack && task.stack === stack);
     }
 
     /**
@@ -175,7 +173,7 @@ class Channel extends EventEmitter {
      * @returns {Task|undefined} A task instance if there are any in queue
      * @memberof Channel
      */
-    retrieveNextItem() {
+    retrieveNextItem(): Task | undefined {
         return this.tasks.shift();
     }
 
@@ -195,7 +193,7 @@ class Channel extends EventEmitter {
      * @returns {Boolean} Returns true if started, false if already started
      * @memberof Channel
      */
-    start() {
+    start(): boolean {
         if (this.isRunning) {
             return false;
         }
@@ -211,12 +209,7 @@ class Channel extends EventEmitter {
             this.isRunning = false;
             this.emit("stopped");
         } else {
-            item
-                .execute()
-                .then(() => this._runNextItem());
+            item.execute().then(() => this._runNextItem());
         }
     }
-
 }
-
-module.exports = Channel;
