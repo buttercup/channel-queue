@@ -7,7 +7,6 @@
   "scripts": {
     "build": "tsc",
     "docs": "npm run build && jsdoc2md dist/*.js > API.md",
-    "pub": "np",
     "pretest": "npm run build",
     "test": "npm run test:unit",
     "test:unit": "mocha -r test/index.js 'test/unit/**/*.spec.js'"
@@ -34,16 +33,15 @@
   },
   "homepage": "https://github.com/buttercup/channel-queue#readme",
   "dependencies": {
-    "eventemitter3": "~3.0.1"
+    "eventemitter3": "^4.0.7"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "~7.1.1",
-    "jsdoc-to-markdown": "^4.0.1",
-    "mocha": "^5.0.0",
-    "np": "~2.19.0",
-    "sinon": "^4.2.2",
-    "sleep-promise": "^2.0.0",
-    "typescript": "~4.2.4"
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "jsdoc-to-markdown": "^7.0.1",
+    "mocha": "^8.4.0",
+    "sinon": "^10.0.0",
+    "sleep-promise": "^9.1.0",
+    "typescript": "^4.2.4"
   }
 }
