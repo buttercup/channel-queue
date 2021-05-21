@@ -1,13 +1,13 @@
-const EventEmitter = require("eventemitter3");
-
-const Channel = require("./Channel.js");
-const ParallelChannel = require("./ParallelChannel.js");
+import EventEmitter from "eventemitter3";
+import { Channel } from "./Channel";
+import { ParallelChannel } from "./ParallelChannel";
 
 /**
  * ChannelQueue class, for managing channels
  * @augments EventEmitter
  */
-class ChannelQueue extends EventEmitter {
+export class ChannelQueue extends EventEmitter {
+    private _channels: Record<string, Channel | ParallelChannel>;
 
     constructor() {
         super();
@@ -28,7 +28,7 @@ class ChannelQueue extends EventEmitter {
      * @returns {Channel} The new channel
      * @throws {Error} Throws if the channel already exists
      */
-    createChannel(name) {
+    createChannel(name: string): Channel {
         if (this.channelExists(name)) {
             throw new Error(`Cannot create channel: channel already exists: ${name}`);
         }
@@ -44,11 +44,11 @@ class ChannelQueue extends EventEmitter {
      * @returns {ParallelChannel} The new channel
      * @throws {Error} Throws if the channel already exists
      */
-    createParallelChannel(name, parallelism) {
+    createParallelChannel(name: string, parallelism?: number): ParallelChannel {
         if (this.channelExists(name)) {
             throw new Error(`Cannot create channel: channel already exists: ${name}`);
         }
-        const channel = this.channels[name] = new ParallelChannel(name);
+        const channel = (this.channels[name] = new ParallelChannel(name));
         if (parallelism) {
             channel.parallelism = parallelism;
         }
@@ -61,7 +61,7 @@ class ChannelQueue extends EventEmitter {
      * @param {String} name The channel name
      * @returns {Channel} The channel which was requested
      */
-    channel(name) {
+    channel(name: string): Channel {
         if (this.channelExists(name) !== true) {
             return this.createChannel(name);
         }
@@ -73,10 +73,7 @@ class ChannelQueue extends EventEmitter {
      * @param {String} name The name of the channel
      * @returns {Boolean} True if it exists
      */
-    channelExists(name) {
+    channelExists(name: string): boolean {
         return this.channels.hasOwnProperty(name);
     }
-
 }
-
-module.exports = ChannelQueue;

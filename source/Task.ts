@@ -1,3 +1,5 @@
+import { Callable, TaskPriority } from "./types";
+
 /**
  * Normal task priority
  * @type {String}
@@ -25,7 +27,14 @@ const TASK_TYPE_TAIL = "tail";
 /**
  * Internal Task class, for handling executions
  */
-class Task {
+export class Task {
+    private _target: Callable<any>;
+    private _stack: string | null = null;
+    private _type: TaskPriority;
+    private _resolveFn: Function | null = null;
+    private _rejectFn: Function | null = null;
+    private _queuedPromise: Promise<any>;
+    private _created: number;
 
     /**
      * Constructor for a Task
@@ -33,12 +42,12 @@ class Task {
      * @param {TaskPriority=} type The priority to set
      * @param {String=} stack The stack name
      */
-    constructor(item, type = TASK_TYPE_NORMAL, stack = null) {
+    constructor(item: Callable<any>, type: TaskPriority = TaskPriority.Normal, stack?: string | null) {
         if (item instanceof Promise !== true && typeof item !== "function") {
             throw new Error("Invalid task item: Expected a Promise or Function");
         }
-        this._target = (typeof item === "function") ? item : () => item;
-        this._stack = stack;
+        this._target = typeof item === "function" ? item : () => item;
+        this._stack = stack ?? null;
         this._type = type;
         this._resolveFn = null;
         this._rejectFn = null;
@@ -95,31 +104,22 @@ class Task {
      * Execute the task
      * @returns {Promise}
      */
-    execute() {
+    execute(): Promise<any> {
         const fn = this.target;
         let output;
         try {
             output = fn();
-        } catch(err) {
-            this._rejectFn(err);
+        } catch (err) {
+            this._rejectFn?.(err);
             return Promise.resolve();
         }
-        const chainOutput = (output instanceof Promise) ? output : Promise.resolve(output);
+        const chainOutput = output instanceof Promise ? output : Promise.resolve(output);
         return chainOutput
-            .then(result => {
-                this._resolveFn(result);
+            .then((result) => {
+                this._resolveFn?.(result);
             })
-            .catch(err => {
-                this._rejectFn(err);
+            .catch((err) => {
+                this._rejectFn?.(err);
             });
     }
-
 }
-
-Object.assign(Task, {
-    TASK_TYPE_NORMAL,
-    TASK_TYPE_HIGH_PRIORITY,
-    TASK_TYPE_TAIL
-});
-
-module.exports = Task;
