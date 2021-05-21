@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "docs": "npm run build && jsdoc2md dist/*.js > API.md",
+    "prepublishOnly": "npm run build",
     "pretest": "npm run build",
     "test": "npm run test:unit",
     "test:unit": "mocha -r test/index.js 'test/unit/**/*.spec.js'"
