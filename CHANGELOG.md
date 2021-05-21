@@ -1,5 +1,13 @@
 # Channel Queue changelog
 
+## v1.0.0
+_2021-05-21_
+
+ * Convert to Typescript
+ * **Breaking changes**:
+   * New type interfaces replace symbols: _see the readme_
+   * No default exports: All exports are now named: _see the readme_
+
 ## v0.5.0
 _2019-11-26_
 
