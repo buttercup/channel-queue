@@ -1,30 +1,6 @@
 import { Callable, TaskPriority } from "./types";
 
 /**
- * Normal task priority
- * @type {String}
- * @name TASK_TYPE_NORMAL
- */
-const TASK_TYPE_NORMAL = "normal";
-/**
- * High task priority
- * @type {String}
- * @name TASK_TYPE_HIGH_PRIORITY
- */
-const TASK_TYPE_HIGH_PRIORITY = "high-priority";
-/**
- * Task tail-priority
- * @type {String}
- * @name TASK_TYPE_TAIL
- */
-const TASK_TYPE_TAIL = "tail";
-
-/**
- * Task priority
- * @typedef {TASK_TYPE_NORMAL|TASK_TYPE_HIGH_PRIORITY|TASK_TYPE_TAIL} TaskPriority
- */
-
-/**
  * Internal Task class, for handling executions
  */
 export class Task {

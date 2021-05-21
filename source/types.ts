@@ -2,6 +2,10 @@ export interface Callable<R> {
     (...args: any[]): R;
 }
 
+/**
+ * Task Priority
+ * @typedef {TaskPriority.Normal|TaskPriority.High|TaskPriority.Tail} TaskPriority
+ */
 export enum TaskPriority {
     /**
      * Normal task priority
@@ -10,7 +14,7 @@ export enum TaskPriority {
     /**
      * High task priority
      */
-    HighPriority = "high-priority",
+    High = "high-priority",
     /**
      * Task tail-priority
      */

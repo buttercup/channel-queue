@@ -28,9 +28,9 @@ describe("Channel", function () {
             this.channel = new Channel("test");
             this.channel.autostart = false;
             this.channel.enqueue(() => {});
-            this.channel.enqueue(() => {}, TaskPriority.HighPriority);
+            this.channel.enqueue(() => {}, TaskPriority.High);
             this.channel.enqueue(() => {});
-            this.channel.enqueue(() => {}, TaskPriority.HighPriority);
+            this.channel.enqueue(() => {}, TaskPriority.High);
         });
 
         it("removes all items from the queue", function () {
@@ -39,7 +39,7 @@ describe("Channel", function () {
         });
 
         it("can remove only items with a certain priority", function () {
-            this.channel.clear(TaskPriority.HighPriority);
+            this.channel.clear(TaskPriority.High);
             expect(this.channel.tasks).to.have.lengthOf(2);
         });
     });
@@ -79,7 +79,7 @@ describe("Channel", function () {
             sinon.spy(this.channel, "sort");
             this.channel.enqueue(op1, TaskPriority.Normal);
             this.channel.enqueue(op2, TaskPriority.Tail);
-            this.channel.enqueue(op3, TaskPriority.HighPriority);
+            this.channel.enqueue(op3, TaskPriority.High);
             expect(this.channel.sort.calledThrice).to.be.true;
             const items = this.channel.tasks;
             expect(items[0].target).to.equal(op3); // High prio

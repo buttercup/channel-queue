@@ -15,10 +15,10 @@ function compareTasks(taskA: Task, taskB: Task): number {
     const { type: typeA, created: createdA } = taskA;
     const { type: typeB, created: createdB } = taskB;
     // Sort by priority:
-    if (typeA === TaskPriority.HighPriority && typeB !== TaskPriority.HighPriority) {
+    if (typeA === TaskPriority.High && typeB !== TaskPriority.High) {
         // A is high priority, and B isn't
         return -1;
-    } else if (typeB === TaskPriority.HighPriority && typeA !== TaskPriority.HighPriority) {
+    } else if (typeB === TaskPriority.High && typeA !== TaskPriority.High) {
         // B is high priority, and A isn't
         return 1;
     } else if (typeB === TaskPriority.Tail && typeA !== TaskPriority.Tail) {

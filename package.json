@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "docs": "jsdoc2md source/*.js > API.md",
+    "docs": "npm run build && jsdoc2md dist/*.js > API.md",
     "pub": "np",
     "pretest": "npm run build",
     "test": "npm run test:unit",

@@ -58,8 +58,8 @@ describe("Task", function () {
         });
 
         it("returns the constructed type", function () {
-            const task = new Task(NOOP, TaskPriority.HighPriority);
-            expect(task.type).to.equal(TaskPriority.HighPriority);
+            const task = new Task(NOOP, TaskPriority.High);
+            expect(task.type).to.equal(TaskPriority.High);
         });
     });
 

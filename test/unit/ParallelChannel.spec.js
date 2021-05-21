@@ -93,7 +93,7 @@ describe("ParallelChannel", function () {
                 this.channel.enqueue(() => {
                     run1();
                     return stopped1;
-                }, TaskPriority.HighPriority),
+                }, TaskPriority.High),
                 this.channel.enqueue(run2, TaskPriority.Normal),
                 sleep(150)
                     .then(() => {
@@ -117,7 +117,7 @@ describe("ParallelChannel", function () {
                 this.channel.enqueue(() => {
                     run1();
                     return stopped1;
-                }, TaskPriority.HighPriority),
+                }, TaskPriority.High),
                 this.channel.enqueue(run2, TaskPriority.Normal),
                 sleep(150).then(() => {
                     expect(run1.calledOnce).to.be.true;
