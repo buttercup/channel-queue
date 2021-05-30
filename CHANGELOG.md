@@ -1,5 +1,10 @@
 # Channel Queue changelog
 
+## v1.0.1
+_2021-05-30_
+
+ * Fix `enqueue` signature
+
 ## v1.0.0
 _2021-05-21_
 

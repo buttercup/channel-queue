@@ -141,7 +141,11 @@ export class Channel extends EventEmitter {
      *  enqueued function or promise
      * @memberof Channel
      */
-    enqueue<T>(item: Callable<T>, type: TaskPriority, stack?: string): Promise<T> {
+    enqueue<T>(
+        item: Callable<T>,
+        type: TaskPriority = TaskPriority.Normal,
+        stack?: string
+    ): Promise<T> {
         if (stack) {
             const stackItems = this.getStackedItems(stack);
             if (stackItems.length > 0) {
