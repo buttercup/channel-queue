@@ -130,4 +130,39 @@ describe("ParallelChannel", function() {
             ]);
         });
     });
+
+    describe("waitForEmpty", function() {
+        beforeEach(function() {
+            this.channel = new ParallelChannel("test", 2);
+            this.channel.autostart = false;
+        });
+
+        it("waits for queue to be empty", async function() {
+            const spy1 = sinon.stub();
+            const spy2 = sinon.stub();
+            const spy3 = sinon.stub();
+            const spyEnd = sinon.stub();
+            this.channel.enqueue(spy1);
+            this.channel.enqueue(spy2);
+            this.channel.enqueue(spy3);
+            this.channel.waitForEmpty().then(spyEnd);
+            await sleep(250);
+            expect(spyEnd.callCount).to.equal(0);
+            this.channel.start();
+            await sleep(50);
+            expect(spyEnd.callCount).to.equal(1);
+            expect(spyEnd.calledAfter(spy1)).to.equal(
+                true,
+                "End-spy should have been called before spy 1"
+            );
+            expect(spyEnd.calledAfter(spy2)).to.equal(
+                true,
+                "End-spy should have been called before spy 2"
+            );
+            expect(spyEnd.calledAfter(spy3)).to.equal(
+                true,
+                "End-spy should have been called before spy 3"
+            );
+        });
+    });
 });

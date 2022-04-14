@@ -97,6 +97,16 @@ export class Channel extends EventEmitter {
     }
 
     /**
+     * The name of the channel
+     * @type {String}
+     * @readonly
+     * @memberof Channel
+     */
+    get name() {
+        return this._name;
+    }
+
+    /**
      * Array of tasks (in queue)
      * @type {Array.<Task>}
      * @readonly
@@ -205,6 +215,19 @@ export class Channel extends EventEmitter {
         this.isRunning = true;
         setTimeout(() => this._runNextItem(), 0);
         return true;
+    }
+
+    /**
+     * Wait for the queue to become empty
+     * @returns
+     */
+    async waitForEmpty(): Promise<void> {
+        return new Promise<void>(resolve => {
+            if (this.isEmpty) return resolve();
+            this.once("stopped", () => {
+                resolve();
+            });
+        });
     }
 
     _runNextItem() {

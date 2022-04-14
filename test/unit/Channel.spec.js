@@ -229,4 +229,23 @@ describe("Channel", function() {
             });
         });
     });
+
+    describe("waitForEmpty", function() {
+        beforeEach(function() {
+            this.channel = new Channel("test");
+            this.channel.autostart = false;
+            this.channel.enqueue(NOOP);
+            this.channel.enqueue(NOOP);
+        });
+
+        it("waits for queue to be empty", async function() {
+            const spy = sinon.stub();
+            this.channel.waitForEmpty().then(spy);
+            await sleep(250);
+            expect(spy.callCount).to.equal(0);
+            this.channel.start();
+            await sleep(50);
+            expect(spy.callCount).to.equal(1);
+        });
+    });
 });
