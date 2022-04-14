@@ -1,5 +1,10 @@
 # Channel Queue changelog
 
+## v1.1.0
+_2022-04-14_
+
+ * `Channel#waitForEmpty` and `ParallelChannel#waitForEmpty` helpers
+
 ## v1.0.1
 _2021-05-30_
 
