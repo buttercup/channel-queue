@@ -1,5 +1,11 @@
 # Channel Queue changelog
 
+## v1.1.1
+_2022-04-19_
+
+ * **Bugfix**:
+   * `ParallelChannel#waitForEmpty` fired before last callbacks finished
+
 ## v1.1.0
 _2022-04-14_
 
