@@ -1,5 +1,5 @@
 const sleep = require("sleep-promise");
-const { Task, ParallelChannel, TaskPriority } = require("../../dist");
+const { ParallelChannel, TaskPriority } = require("../../dist");
 
 const NOOP = () => {};
 
@@ -140,15 +140,21 @@ describe("ParallelChannel", function() {
         it("waits for queue to be empty", async function() {
             const spy1 = sinon.stub();
             const spy2 = sinon.stub();
-            const spy3 = sinon.stub();
+            const spy3 = sinon.spy();
             const spyEnd = sinon.stub();
             this.channel.enqueue(spy1);
             this.channel.enqueue(spy2);
-            this.channel.enqueue(spy3);
-            this.channel.waitForEmpty().then(spyEnd);
+            this.channel.enqueue(async function() {
+                await sleep(250);
+                console.log("3");
+                spy3();
+            });
+            const waitEmptyPromise = this.channel.waitForEmpty();
+            waitEmptyPromise.then(spyEnd);
             await sleep(250);
             expect(spyEnd.callCount).to.equal(0);
             this.channel.start();
+            await waitEmptyPromise;
             await sleep(50);
             expect(spyEnd.callCount).to.equal(1);
             expect(spyEnd.calledAfter(spy1)).to.equal(

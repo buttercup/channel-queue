@@ -54,12 +54,12 @@ export class ParallelChannel extends Channel {
             this.isRunning = false;
             this.emit("stopped");
         };
-        let itemsToRun = this.parallelism - this.runningTasks.length;
-        if (itemsToRun <= 0) {
-            return;
-        }
         if (this.runningTasks.length === 0 && this.tasks.length === 0) {
             stopChannel();
+            return;
+        }
+        let itemsToRun = this.parallelism - this.runningTasks.length;
+        if (itemsToRun <= 0) {
             return;
         }
         while (itemsToRun > 0) {
@@ -80,7 +80,7 @@ export class ParallelChannel extends Channel {
             itemsToRun -= 1;
             const item = this.retrieveNextItem();
             if (!item) {
-                stopChannel();
+                // No item, skip
                 return;
             }
             this.runningTasks.push(item);
