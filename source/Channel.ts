@@ -224,7 +224,7 @@ export class Channel extends EventEmitter {
 
     /**
      * Wait for the queue to become empty
-     * @returns
+     * @returns {Promise}
      */
     async waitForEmpty(): Promise<void> {
         return new Promise<void>(resolve => {

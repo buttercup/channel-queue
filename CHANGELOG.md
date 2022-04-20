@@ -1,5 +1,10 @@
 # Channel Queue changelog
 
+## v1.2.0
+_2022-04-20_
+
+ * Timeout support for enqueued tasks
+
 ## v1.1.1
 _2022-04-19_
 

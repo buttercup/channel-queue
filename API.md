@@ -23,126 +23,6 @@
 </dd>
 </dl>
 
-<a name="Channel"></a>
-
-## Channel ⇐ <code>EventEmitter</code>
-Channel class (queue)
-
-**Kind**: global class  
-**Extends**: <code>EventEmitter</code>  
-
-* [Channel](#Channel) ⇐ <code>EventEmitter</code>
-    * [new Channel(name)](#new_Channel_new)
-    * [.autostart](#Channel+autostart) : <code>Boolean</code>
-    * [.isEmpty](#Channel+isEmpty) : <code>Boolean</code>
-    * [.isRunning](#Channel+isRunning) : <code>Boolean</code>
-    * [.tasks](#Channel+tasks) : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
-    * [.clear([priorityType])](#Channel+clear)
-    * [.enqueue(item, [type], [stack])](#Channel+enqueue) ⇒ <code>Promise</code>
-    * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
-    * [.retrieveNextItem()](#Channel+retrieveNextItem) ⇒ [<code>Task</code>](#Task) \| <code>undefined</code>
-    * [.sort()](#Channel+sort)
-    * [.start()](#Channel+start) ⇒ <code>Boolean</code>
-
-<a name="new_Channel_new"></a>
-
-### new Channel(name)
-Constructor for a Channel
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>String</code> | The name of the channel |
-
-<a name="Channel+autostart"></a>
-
-### channel.autostart : <code>Boolean</code>
-Whether the execution should start automatically or not
-Defaults to true
-
-**Kind**: instance property of [<code>Channel</code>](#Channel)  
-<a name="Channel+isEmpty"></a>
-
-### channel.isEmpty : <code>Boolean</code>
-Whether the queue is empty or not
-
-**Kind**: instance property of [<code>Channel</code>](#Channel)  
-**Read only**: true  
-<a name="Channel+isRunning"></a>
-
-### channel.isRunning : <code>Boolean</code>
-Whether the queue is currently running or not
-
-**Kind**: instance property of [<code>Channel</code>](#Channel)  
-**Read only**: true  
-<a name="Channel+tasks"></a>
-
-### channel.tasks : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
-Array of tasks (in queue)
-
-**Kind**: instance property of [<code>Channel</code>](#Channel)  
-**Read only**: true  
-<a name="Channel+clear"></a>
-
-### channel.clear([priorityType])
-Remove all pending tasks from the channel
-
-**Kind**: instance method of [<code>Channel</code>](#Channel)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [priorityType] | <code>String</code> | Optional priority type to clear  only tasks with a certain priority value |
-
-<a name="Channel+enqueue"></a>
-
-### channel.enqueue(item, [type], [stack]) ⇒ <code>Promise</code>
-Enqueues a function
-
-**Kind**: instance method of [<code>Channel</code>](#Channel)  
-**Returns**: <code>Promise</code> - A promise that eventually resolves with the result from the
- enqueued function or promise  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| item | <code>function</code> \| <code>Promise</code> | The item to place into the queue |
-| [type] | [<code>TaskPriority</code>](#TaskPriority) | The task priority to use |
-| [stack] | <code>String</code> | The stack name |
-
-<a name="Channel+getStackedItems"></a>
-
-### channel.getStackedItems(stack) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
-Get all task items for a stack name
-
-**Kind**: instance method of [<code>Channel</code>](#Channel)  
-**Returns**: [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task) - An array of task instances  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| stack | <code>String</code> | The stack name |
-
-<a name="Channel+retrieveNextItem"></a>
-
-### channel.retrieveNextItem() ⇒ [<code>Task</code>](#Task) \| <code>undefined</code>
-Get the next queued Task instance
-This modifies the task queue by removing the task
-
-**Kind**: instance method of [<code>Channel</code>](#Channel)  
-**Returns**: [<code>Task</code>](#Task) \| <code>undefined</code> - A task instance if there are any in queue  
-<a name="Channel+sort"></a>
-
-### channel.sort()
-Sort the tasks
-
-**Kind**: instance method of [<code>Channel</code>](#Channel)  
-<a name="Channel+start"></a>
-
-### channel.start() ⇒ <code>Boolean</code>
-Start processing the queue
-Will automatically return early if queue has already started
-
-**Kind**: instance method of [<code>Channel</code>](#Channel)  
-**Returns**: <code>Boolean</code> - Returns true if started, false if already started  
-**Emits**: <code>Channel#event:started</code>, <code>Channel#event:stopped</code>  
 <a name="ChannelQueue"></a>
 
 ## ChannelQueue ⇐ <code>EventEmitter</code>
@@ -234,16 +114,18 @@ ParallelChannel class (queue)
 * [ParallelChannel](#ParallelChannel) ⇐ [<code>Channel</code>](#Channel)
     * [.isEmpty](#ParallelChannel+isEmpty) : <code>Boolean</code>
     * [.parallelism](#ParallelChannel+parallelism) : <code>Number</code>
-    * [.runningTasks](#ParallelChannel+runningTasks) : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
+    * [.runningTasks](#ParallelChannel+runningTasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
     * [.autostart](#Channel+autostart) : <code>Boolean</code>
     * [.isRunning](#Channel+isRunning) : <code>Boolean</code>
-    * [.tasks](#Channel+tasks) : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
+    * [.name](#Channel+name) : <code>String</code>
+    * [.tasks](#Channel+tasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
     * [.clear([priorityType])](#Channel+clear)
-    * [.enqueue(item, [type], [stack])](#Channel+enqueue) ⇒ <code>Promise</code>
-    * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
+    * [.enqueue(item, [type], [stack], [timeout])](#Channel+enqueue) ⇒ <code>Promise</code>
+    * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
     * [.retrieveNextItem()](#Channel+retrieveNextItem) ⇒ [<code>Task</code>](#Task) \| <code>undefined</code>
     * [.sort()](#Channel+sort)
     * [.start()](#Channel+start) ⇒ <code>Boolean</code>
+    * [.waitForEmpty()](#Channel+waitForEmpty) ⇒ <code>Promise</code>
 
 <a name="ParallelChannel+isEmpty"></a>
 
@@ -262,7 +144,7 @@ The amount of allowed parallel executed tasks
 **Read only**: true  
 <a name="ParallelChannel+runningTasks"></a>
 
-### parallelChannel.runningTasks : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
+### parallelChannel.runningTasks : [<code>Array.&lt;Task&gt;</code>](#Task)
 Get the currently running tasks
 
 **Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
@@ -274,19 +156,30 @@ Whether the execution should start automatically or not
 Defaults to true
 
 **Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>autostart</code>](#Channel+autostart)  
 <a name="Channel+isRunning"></a>
 
 ### parallelChannel.isRunning : <code>Boolean</code>
 Whether the queue is currently running or not
 
 **Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>isRunning</code>](#Channel+isRunning)  
+**Read only**: true  
+<a name="Channel+name"></a>
+
+### parallelChannel.name : <code>String</code>
+The name of the channel
+
+**Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>name</code>](#Channel+name)  
 **Read only**: true  
 <a name="Channel+tasks"></a>
 
-### parallelChannel.tasks : [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
+### parallelChannel.tasks : [<code>Array.&lt;Task&gt;</code>](#Task)
 Array of tasks (in queue)
 
 **Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>tasks</code>](#Channel+tasks)  
 **Read only**: true  
 <a name="Channel+clear"></a>
 
@@ -294,6 +187,7 @@ Array of tasks (in queue)
 Remove all pending tasks from the channel
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>clear</code>](#Channel+clear)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -301,10 +195,11 @@ Remove all pending tasks from the channel
 
 <a name="Channel+enqueue"></a>
 
-### parallelChannel.enqueue(item, [type], [stack]) ⇒ <code>Promise</code>
+### parallelChannel.enqueue(item, [type], [stack], [timeout]) ⇒ <code>Promise</code>
 Enqueues a function
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>enqueue</code>](#Channel+enqueue)  
 **Returns**: <code>Promise</code> - A promise that eventually resolves with the result from the
  enqueued function or promise  
 
@@ -313,14 +208,16 @@ Enqueues a function
 | item | <code>function</code> \| <code>Promise</code> | The item to place into the queue |
 | [type] | [<code>TaskPriority</code>](#TaskPriority) | The task priority to use |
 | [stack] | <code>String</code> | The stack name |
+| [timeout] | <code>Number</code> | Optional millisecond time-limt |
 
 <a name="Channel+getStackedItems"></a>
 
-### parallelChannel.getStackedItems(stack) ⇒ [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task)
+### parallelChannel.getStackedItems(stack) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
 Get all task items for a stack name
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
-**Returns**: [<code>[ &#x27;Array&#x27; ].&lt;Task&gt;</code>](#Task) - An array of task instances  
+**Overrides**: [<code>getStackedItems</code>](#Channel+getStackedItems)  
+**Returns**: [<code>Array.&lt;Task&gt;</code>](#Task) - An array of task instances  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -333,6 +230,7 @@ Get the next queued Task instance
 This modifies the task queue by removing the task
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>retrieveNextItem</code>](#Channel+retrieveNextItem)  
 **Returns**: [<code>Task</code>](#Task) \| <code>undefined</code> - A task instance if there are any in queue  
 <a name="Channel+sort"></a>
 
@@ -340,6 +238,7 @@ This modifies the task queue by removing the task
 Sort the tasks
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>sort</code>](#Channel+sort)  
 <a name="Channel+start"></a>
 
 ### parallelChannel.start() ⇒ <code>Boolean</code>
@@ -347,8 +246,16 @@ Start processing the queue
 Will automatically return early if queue has already started
 
 **Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>start</code>](#Channel+start)  
 **Returns**: <code>Boolean</code> - Returns true if started, false if already started  
 **Emits**: <code>Channel#event:started</code>, <code>Channel#event:stopped</code>  
+<a name="Channel+waitForEmpty"></a>
+
+### parallelChannel.waitForEmpty() ⇒ <code>Promise</code>
+Wait for the queue to become empty
+
+**Kind**: instance method of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>waitForEmpty</code>](#Channel+waitForEmpty)  
 <a name="Task"></a>
 
 ## Task
@@ -362,6 +269,7 @@ Internal Task class, for handling executions
     * [.queuedPromise](#Task+queuedPromise) : <code>Promise</code>
     * [.stack](#Task+stack) : <code>String</code>
     * [.target](#Task+target) : <code>function</code>
+    * [.timeLimit](#Task+timeLimit) : <code>Number</code>
     * [.type](#Task+type) : [<code>TaskPriority</code>](#TaskPriority)
     * [.execute()](#Task+execute) ⇒ <code>Promise</code>
 
@@ -400,6 +308,12 @@ The stack name
 
 ### task.target : <code>function</code>
 The target function
+
+**Kind**: instance property of [<code>Task</code>](#Task)  
+<a name="Task+timeLimit"></a>
+
+### task.timeLimit : <code>Number</code>
+Current time limit
 
 **Kind**: instance property of [<code>Task</code>](#Task)  
 <a name="Task+type"></a>
