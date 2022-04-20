@@ -2,6 +2,10 @@ export interface Callable<R> {
     (...args: any[]): R;
 }
 
+export enum ErrorCode {
+    TaskTimeout = "TASKTIMEOUT"
+}
+
 /**
  * Task Priority
  * @typedef {TaskPriority.Normal|TaskPriority.High|TaskPriority.Tail} TaskPriority

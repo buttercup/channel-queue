@@ -116,11 +116,11 @@ export class Channel extends EventEmitter {
         return this._tasks;
     }
 
-    set autostart(auto) {
+    set autostart(auto: boolean) {
         this._autostart = !!auto;
     }
 
-    set isRunning(isRunning) {
+    set isRunning(isRunning: boolean) {
         this._running = isRunning;
     }
 
@@ -147,6 +147,7 @@ export class Channel extends EventEmitter {
      * @param {Function|Promise} item The item to place into the queue
      * @param {TaskPriority=} type The task priority to use
      * @param {String=} stack The stack name
+     * @param {Number=} timeout Optional millisecond time-limt
      * @returns {Promise} A promise that eventually resolves with the result from the
      *  enqueued function or promise
      * @memberof Channel
@@ -154,7 +155,8 @@ export class Channel extends EventEmitter {
     enqueue<T>(
         item: Callable<T>,
         type: TaskPriority = TaskPriority.Normal,
-        stack?: string
+        stack?: string,
+        timeout?: number
     ): Promise<T> {
         if (stack) {
             const stackItems = this.getStackedItems(stack);
@@ -163,6 +165,9 @@ export class Channel extends EventEmitter {
             }
         }
         const task = new Task(item, type, stack);
+        if (typeof timeout === "number" && timeout >= 0) {
+            task.timeLimit = timeout;
+        }
         this.tasks.push(task);
         this.sort();
         if (this.autostart) {

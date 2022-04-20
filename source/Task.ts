@@ -1,3 +1,4 @@
+import { timeLimit } from "./tools";
 import { Callable, TaskPriority } from "./types";
 
 /**
@@ -11,6 +12,7 @@ export class Task {
     private _rejectFn: Function | null = null;
     private _queuedPromise: Promise<any>;
     private _created: number;
+    private _timeLimit: number;
 
     /**
      * Constructor for a Task
@@ -29,6 +31,7 @@ export class Task {
         this._target = typeof item === "function" ? item : () => item;
         this._stack = stack ?? null;
         this._type = type;
+        this._timeLimit = -1;
         this._resolveFn = null;
         this._rejectFn = null;
         this._queuedPromise = new Promise((resolve, reject) => {
@@ -73,11 +76,23 @@ export class Task {
     }
 
     /**
+     * Current time limit
+     * @type {Number}
+     */
+    get timeLimit() {
+        return this._timeLimit;
+    }
+
+    /**
      * The task priority type
      * @type {TaskPriority}
      */
     get type() {
         return this._type;
+    }
+
+    set timeLimit(newLimit: number) {
+        this._timeLimit = newLimit;
     }
 
     /**
@@ -93,7 +108,11 @@ export class Task {
             this._rejectFn?.(err);
             return Promise.resolve();
         }
-        const chainOutput = output instanceof Promise ? output : Promise.resolve(output);
+        let chainOutput: Promise<any> =
+            output instanceof Promise ? output : Promise.resolve(output);
+        if (this.timeLimit >= 0) {
+            chainOutput = timeLimit(chainOutput, this.timeLimit);
+        }
         return chainOutput
             .then(result => {
                 this._resolveFn?.(result);

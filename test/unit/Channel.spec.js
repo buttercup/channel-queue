@@ -138,6 +138,22 @@ describe("Channel", function() {
             const closing2 = this.channel.enqueue(NOOP, TaskPriority.Normal, "closing");
             expect(closing1).to.equal(closing2);
         });
+
+        it("supports specifying a time limit for enqueued items", async function() {
+            let timer;
+            const result = this.channel.enqueue(
+                () =>
+                    new Promise(resolve => {
+                        timer = setTimeout(resolve, 2000);
+                    }),
+                undefined,
+                undefined,
+                250
+            );
+            this.channel.start();
+            await expect(result).to.be.eventually.rejected;
+            clearTimeout(timer);
+        });
     });
 
     describe("getStackedItems", function() {

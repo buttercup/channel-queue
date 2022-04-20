@@ -75,11 +75,39 @@ describe("Task", function() {
         });
 
         it("returns a promise even if target throws", function() {
-            const task = new Task(() => {
+            this.task = new Task(() => {
                 throw new Error("Failure");
             });
             const output = this.task.execute();
             return expect(output).to.be.eventually.fulfilled;
+        });
+
+        it("queued promise throws if target does", function() {
+            this.task = new Task(() => {
+                throw new Error("Failure");
+            });
+            this.task.execute();
+            return expect(this.task.queuedPromise).to.be.eventually.rejected;
+        });
+
+        it("returns a resolving promise for queuing", function() {
+            this.task.execute();
+            expect(this.task.queuedPromise).to.be.an.instanceof(Promise);
+            return expect(this.task.queuedPromise).to.be.eventually.fulfilled;
+        });
+
+        it("supports timing-out tasks", async function() {
+            let timer;
+            this.task = new Task(
+                () =>
+                    new Promise(resolve => {
+                        timer = setTimeout(resolve, 2000);
+                    })
+            );
+            this.task.timeLimit = 250;
+            this.task.execute();
+            await expect(this.task.queuedPromise).to.be.eventually.rejected;
+            clearTimeout(timer);
         });
     });
 });
