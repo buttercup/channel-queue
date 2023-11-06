@@ -1,5 +1,10 @@
 # Channel Queue changelog
 
+## v1.3.0
+_2023-11-06_
+
+ * Support throwing error on `waitForEmpty` if task failed, using `throwForFailures` option
+
 ## v1.2.0
 _2022-04-20_
 
