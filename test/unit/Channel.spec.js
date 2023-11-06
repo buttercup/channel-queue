@@ -1,5 +1,6 @@
 const EventEmitter = require("eventemitter3");
 const sleep = require("sleep-promise");
+const { Layerr } = require("layerr");
 const { Task, Channel, TaskPriority } = require("../../dist");
 
 const NOOP = () => {};
@@ -154,6 +155,20 @@ describe("Channel", function() {
             await expect(result).to.be.eventually.rejected;
             clearTimeout(timer);
         });
+
+        it("throws if the enqueued promise throws", async function() {
+            this.channel.autostart = true;
+            const fails = () => Promise.reject(new Error("Test"));
+            const resultPromise = this.channel.enqueue(fails);
+            let failureResult = null;
+            resultPromise.catch(err => {
+                failureResult = err;
+            });
+            await sleep(250);
+            expect(failureResult)
+                .to.be.an.instanceof(Error)
+                .that.satisfies(err => err.message === "Test");
+        });
     });
 
     describe("getStackedItems", function() {
@@ -262,6 +277,34 @@ describe("Channel", function() {
             this.channel.start();
             await sleep(50);
             expect(spy.callCount).to.equal(1);
+        });
+
+        it("does not throw an error, when unconfigured, if one occurred during execution", async function() {
+            this.channel.autostart = true;
+            const fails = () => Promise.reject(new Error("Test"));
+            this.channel.enqueue(fails);
+            let failureResult = null;
+            this.channel.waitForEmpty().catch(err => {
+                failureResult = err;
+            });
+            await sleep(250);
+            await this.channel.waitForEmpty();
+            expect(failureResult).to.be.null;
+        });
+
+        it("throws an error, when configured, if one occurred during execution", async function() {
+            this.channel.autostart = true;
+            const fails = () => Promise.reject(new Error("Test"));
+            this.channel.enqueue(fails);
+            let failureResult = null;
+            this.channel.waitForEmpty({ throwForFailures: true }).catch(err => {
+                failureResult = err;
+            });
+            await sleep(250);
+            await this.channel.waitForEmpty();
+            expect(failureResult)
+                .to.be.an.instanceof(Layerr)
+                .that.satisfies(err => /Enqueued task failed.+Test/i.test(err.message));
         });
     });
 });

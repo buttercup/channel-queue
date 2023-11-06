@@ -5,14 +5,15 @@ import { Callable, TaskPriority } from "./types";
  * Internal Task class, for handling executions
  */
 export class Task {
-    private _target: Callable<any>;
-    private _stack: string | null = null;
-    private _type: TaskPriority;
-    private _resolveFn: Function | null = null;
-    private _rejectFn: Function | null = null;
-    private _queuedPromise: Promise<any>;
     private _created: number;
+    private _error: Error | null = null;
+    private _queuedPromise: Promise<any>;
+    private _rejectFn: Function | null = null;
+    private _resolveFn: Function | null = null;
+    private _stack: string | null = null;
+    private _target: Callable<any>;
     private _timeLimit: number;
+    private _type: TaskPriority;
 
     /**
      * Constructor for a Task
@@ -49,6 +50,14 @@ export class Task {
      */
     get created() {
         return this._created;
+    }
+
+    /**
+     * Execution error, if one occurred
+     * @type {Error | null}
+     */
+    get error(): Error | null {
+        return this._error;
     }
 
     /**
@@ -99,9 +108,9 @@ export class Task {
      * Execute the task
      * @returns {Promise}
      */
-    execute(): Promise<any> {
+    async execute(): Promise<void> {
         const fn = this.target;
-        let output;
+        let output: any;
         try {
             output = fn();
         } catch (err) {
@@ -118,6 +127,7 @@ export class Task {
                 this._resolveFn?.(result);
             })
             .catch(err => {
+                this._error = err;
                 this._rejectFn?.(err);
             });
     }

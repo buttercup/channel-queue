@@ -1,4 +1,5 @@
 import EventEmitter from "eventemitter3";
+import { Layerr } from "layerr";
 import { Task } from "./Task";
 import { Callable, TaskPriority } from "./types";
 
@@ -46,6 +47,7 @@ function compareTasks(taskA: Task, taskB: Task): number {
  */
 export class Channel extends EventEmitter {
     private _name: string;
+    private _taskErrors: Error[] = [];
     private _tasks: Task[];
     private _running: boolean;
     private _autostart: boolean;
@@ -226,13 +228,21 @@ export class Channel extends EventEmitter {
      * Wait for the queue to become empty
      * @returns {Promise}
      */
-    async waitForEmpty(): Promise<void> {
-        return new Promise<void>(resolve => {
+    async waitForEmpty(
+        opts: {
+            throwForFailures?: boolean;
+        } = {}
+    ): Promise<void> {
+        const { throwForFailures = false } = opts;
+        await new Promise<void>(resolve => {
             if (this.isEmpty) return resolve();
             this.once("stopped", () => {
                 resolve();
             });
         });
+        if (throwForFailures && this._taskErrors.length > 0) {
+            throw new Layerr(this._taskErrors[0], "Enqueued task failed");
+        }
     }
 
     _runNextItem() {
@@ -241,7 +251,16 @@ export class Channel extends EventEmitter {
             this.isRunning = false;
             this.emit("stopped");
         } else {
-            item.execute().then(() => this._runNextItem());
+            item.execute()
+                .then(() => {
+                    if (item.error) {
+                        this._taskErrors.push(item.error);
+                    }
+                })
+                .then(() => this._runNextItem())
+                .catch(err => {
+                    console.error(err);
+                });
         }
     }
 }
