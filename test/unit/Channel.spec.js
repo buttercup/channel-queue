@@ -169,6 +169,19 @@ describe("Channel", function() {
                 .to.be.an.instanceof(Error)
                 .that.satisfies(err => err.message === "Test");
         });
+
+        it("does not throw, if the enqueued promise throws, when disabled", async function() {
+            this.channel.autostart = true;
+            this.channel.tasksThrow = false;
+            const fails = () => Promise.reject(new Error("Test"));
+            const resultPromise = this.channel.enqueue(fails);
+            let failureResult = null;
+            resultPromise.catch(err => {
+                failureResult = err;
+            });
+            await sleep(250);
+            expect(failureResult).to.be.null;
+        });
     });
 
     describe("getStackedItems", function() {
@@ -295,7 +308,10 @@ describe("Channel", function() {
         it("throws an error, when configured, if one occurred during execution", async function() {
             this.channel.autostart = true;
             const fails = () => Promise.reject(new Error("Test"));
-            this.channel.enqueue(fails);
+            let enqueueError;
+            this.channel.enqueue(fails).catch(err => {
+                enqueueError = err;
+            });
             let failureResult = null;
             this.channel.waitForEmpty({ throwForFailures: true }).catch(err => {
                 failureResult = err;
@@ -303,8 +319,9 @@ describe("Channel", function() {
             await sleep(250);
             await this.channel.waitForEmpty();
             expect(failureResult)
-                .to.be.an.instanceof(Layerr)
+                .to.be.an.instanceof(Layerr, "waitForEmpty should throw a Layerr instance")
                 .that.satisfies(err => /Enqueued task failed.+Test/i.test(err.message));
+            expect(enqueueError).to.be.an.instanceof(Error, "enqueue call should itself throw");
         });
     });
 });
