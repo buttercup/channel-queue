@@ -119,6 +119,7 @@ ParallelChannel class (queue)
     * [.isRunning](#Channel+isRunning) : <code>Boolean</code>
     * [.name](#Channel+name) : <code>String</code>
     * [.tasks](#Channel+tasks) : [<code>Array.&lt;Task&gt;</code>](#Task)
+    * [.tasksThrow](#Channel+tasksThrow) : <code>Boolean</code>
     * [.clear([priorityType])](#Channel+clear)
     * [.enqueue(item, [type], [stack], [timeout])](#Channel+enqueue) ⇒ <code>Promise</code>
     * [.getStackedItems(stack)](#Channel+getStackedItems) ⇒ [<code>Array.&lt;Task&gt;</code>](#Task)
@@ -181,6 +182,13 @@ Array of tasks (in queue)
 **Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
 **Overrides**: [<code>tasks</code>](#Channel+tasks)  
 **Read only**: true  
+<a name="Channel+tasksThrow"></a>
+
+### parallelChannel.tasksThrow : <code>Boolean</code>
+Whether or not tasks throw errors
+
+**Kind**: instance property of [<code>ParallelChannel</code>](#ParallelChannel)  
+**Overrides**: [<code>tasksThrow</code>](#Channel+tasksThrow)  
 <a name="Channel+clear"></a>
 
 ### parallelChannel.clear([priorityType])
@@ -266,6 +274,7 @@ Internal Task class, for handling executions
 * [Task](#Task)
     * [new Task(item, [type], [stack])](#new_Task_new)
     * [.created](#Task+created) : <code>Number</code>
+    * [.error](#Task+error) : <code>Error</code> \| <code>null</code>
     * [.queuedPromise](#Task+queuedPromise) : <code>Promise</code>
     * [.stack](#Task+stack) : <code>String</code>
     * [.target](#Task+target) : <code>function</code>
@@ -292,6 +301,12 @@ Creation timestamp
 
 **Kind**: instance property of [<code>Task</code>](#Task)  
 **Read only**: true  
+<a name="Task+error"></a>
+
+### task.error : <code>Error</code> \| <code>null</code>
+Execution error, if one occurred
+
+**Kind**: instance property of [<code>Task</code>](#Task)  
 <a name="Task+queuedPromise"></a>
 
 ### task.queuedPromise : <code>Promise</code>

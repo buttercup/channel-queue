@@ -1,5 +1,10 @@
 # Channel Queue changelog
 
+## v1.4.0
+_2023-11-12_
+
+ * Support for preventing enqueued tasks from throwing
+
 ## v1.3.0
 _2023-11-06_
 
