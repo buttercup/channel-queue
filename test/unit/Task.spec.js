@@ -82,12 +82,22 @@ describe("Task", function() {
             return expect(output).to.be.eventually.fulfilled;
         });
 
-        it("queued promise throws if target does", function() {
+        it("queued promise throws if target does", async function() {
             this.task = new Task(() => {
                 throw new Error("Failure");
             });
             this.task.execute();
-            return expect(this.task.queuedPromise).to.be.eventually.rejected;
+            await expect(this.task.queuedPromise).to.be.eventually.rejected;
+            expect(this.task.error).to.be.an.instanceof(Error);
+        });
+
+        it("queued promise does not throw if disabled", async function() {
+            this.task = new Task(() => {
+                throw new Error("Failure");
+            });
+            this.task.execute(false);
+            await expect(this.task.queuedPromise).to.be.eventually.fulfilled;
+            expect(this.task.error).to.be.an.instanceof(Error);
         });
 
         it("returns a resolving promise for queuing", function() {
