@@ -108,13 +108,18 @@ export class Task {
      * Execute the task
      * @returns {Promise}
      */
-    async execute(): Promise<void> {
+    async execute(throws: boolean = true): Promise<void> {
         const fn = this.target;
         let output: any;
         try {
             output = fn();
         } catch (err) {
-            this._rejectFn?.(err);
+            this._error = err;
+            if (throws) {
+                this._rejectFn?.(err);
+            } else {
+                this._resolveFn?.();
+            }
             return Promise.resolve();
         }
         let chainOutput: Promise<any> =
@@ -122,13 +127,17 @@ export class Task {
         if (this.timeLimit >= 0) {
             chainOutput = timeLimit(chainOutput, this.timeLimit);
         }
-        return chainOutput
+        await chainOutput
             .then(result => {
                 this._resolveFn?.(result);
             })
             .catch(err => {
                 this._error = err;
-                this._rejectFn?.(err);
+                if (throws) {
+                    this._rejectFn?.(err);
+                } else {
+                    this._resolveFn?.();
+                }
             });
     }
 }

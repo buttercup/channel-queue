@@ -46,11 +46,12 @@ function compareTasks(taskA: Task, taskB: Task): number {
  * @augments EventEmitter
  */
 export class Channel extends EventEmitter {
+    private _autostart: boolean;
     private _name: string;
+    private _running: boolean;
     private _taskErrors: Error[] = [];
     private _tasks: Task[];
-    private _running: boolean;
-    private _autostart: boolean;
+    private _tasksThrow: boolean = true;
 
     /**
      * Constructor for a Channel
@@ -118,12 +119,25 @@ export class Channel extends EventEmitter {
         return this._tasks;
     }
 
+    /**
+     * Whether or not tasks throw errors
+     * @type {Boolean}
+     * @memberof Channel
+     */
+    get tasksThrow(): boolean {
+        return this._tasksThrow;
+    }
+
     set autostart(auto: boolean) {
         this._autostart = !!auto;
     }
 
     set isRunning(isRunning: boolean) {
         this._running = isRunning;
+    }
+
+    set tasksThrow(tasksThrow: boolean) {
+        this._tasksThrow = tasksThrow;
     }
 
     /**
@@ -251,7 +265,7 @@ export class Channel extends EventEmitter {
             this.isRunning = false;
             this.emit("stopped");
         } else {
-            item.execute()
+            item.execute(this._tasksThrow)
                 .then(() => {
                     if (item.error) {
                         this._taskErrors.push(item.error);
