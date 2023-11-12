@@ -20,7 +20,7 @@ npm install @buttercup/channel-queue --save
 ## Usage
 The simplest usage is to just queue some tasks:
 
-```javascript
+```typescript
 import { ChannelQueue } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
@@ -35,7 +35,7 @@ someChannel.enqueue(job3);
 
 You can push tasks above others by setting them as high-priority:
 
-```javascript
+```typescript
 import { ChannelQueue, TaskPriority } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
@@ -48,7 +48,7 @@ workChannel.enqueue(importantJobMethod, TaskPriority.High).then(result => {
 
 Tasks can also be run as "low" priority or at the **tail** end of the queue:
 
-```javascript
+```typescript
 import { ChannelQueue, TaskPriority } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
@@ -57,10 +57,40 @@ const workChannel = queue.channel("work");
 workChannel.enqueue(runNearEnd, TaskPriority.Tail);
 ```
 
+### Error Handling
+
+Regardless whether an enqueued task fails or not, the channel will continue processing after it's done.
+
+By default, if the task enqueued in `enqueue` throws an error, it will throw at the `enqueue` call:
+
+```typescript
+// The following throws:
+await channel.enqueue(() => Promise.reject(new Error("Fails!")));
+```
+
+You can disable enqueued functions throwing errors by setting `tasksThrow` to `false`:
+
+```typescript
+channel.tasksThrow = false;
+// The following will not throw:
+await channel.enqueue(() => Promise.reject(new Error("Fails!")));
+```
+
+Disabling this is really only useful if you use `waitForEmpty` with the `throwForFailures` set to `true`. This allows you to delay error handling until the channel is waited upon:
+
+```typescript
+channel.tasksThrow = false;
+channel.enqueue(() => /* ... */)
+channel.enqueue(() => Promise.reject(new Error("Fails!")));
+
+// Later:
+await channel.waitForEmpty({ throwForFailures: true });
+```
+
 ### Stacking
 Items can be "stacked", meaning that if specified, items can be limited to only 1 pending item in queue. All items of the same stack _name_ would simply queue on the same item and not create more tasks. The stack can be specified when enqueuing:
 
-```javascript
+```typescript
 import { ChannelQueue } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
@@ -76,7 +106,7 @@ const promise3 = workChannel.enqueue(saveWorkFn, undefined, "save");
 ### Parallel Execution
 Tasks can be run in parallel using the `ParallelChannel` class. You can create a parallel channel, in place of a regular channel, by calling `ChannelQueue#createParallelChannel`:
 
-```javascript
+```typescript
 import { ChannelQueue } from "@buttercup/channel-queue";
 
 const queue = new ChannelQueue();
@@ -91,11 +121,21 @@ Parallel channels, like their name implies, can run tasks in parallel. Instead o
 
 Parallel channels by default do not run tasks of different priorities simultaneously. This means that if the current running tasks are high-priority, no normal priority tasks will be started. This feature can be disabled by running `parallelChannel.canRunAcrossTaskTypes = true`.
 
-### Clearing
+### Waiting and Clearing
+
+You can wait for a channel to empty (having all tasks completed) by using `waitForEmpty`:
+
+```typescript
+channel.enqueue(someTask);
+channel.enqueue(someTask);
+
+// Later:
+await channel.waitForEmpty();
+```
 
 You can clear all enqueued items in a `Channel` by calling `clear()`:
 
-```javascript
+```typescript
 queue.channel("myChannel").clear();
 ```
 
