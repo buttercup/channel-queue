@@ -1,5 +1,10 @@
 # Channel Queue changelog
 
+## v1.5.0
+_2024-12-11_
+
+ * [#14](https://github.com/buttercup/channel-queue/pull/14) Fix ESM builds with `eventemitter3` correct import
+
 ## v1.4.0
 _2023-11-12_
 
