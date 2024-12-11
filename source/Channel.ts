@@ -1,4 +1,4 @@
-import EventEmitter from "eventemitter3";
+import { EventEmitter } from "eventemitter3";
 import { Layerr } from "layerr";
 import { Task } from "./Task";
 import { Callable, TaskPriority } from "./types";

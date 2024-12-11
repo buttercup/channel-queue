@@ -1,4 +1,4 @@
-import EventEmitter from "eventemitter3";
+import { EventEmitter } from "eventemitter3";
 import { Channel } from "./Channel";
 import { ParallelChannel } from "./ParallelChannel";
 
